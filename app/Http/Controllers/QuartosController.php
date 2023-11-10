@@ -24,6 +24,7 @@ class QuartosController extends Controller
 
             $quartos = Quarto::buscarQuartos($idHotel, $idQuarto);
         
+            dd("teste");
             if (empty($quartos)) {
                 return response()->json(['message' => 'Hotel informado não possui quarto cadastrado.'], 404);
             }
