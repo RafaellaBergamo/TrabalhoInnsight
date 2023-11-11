@@ -29,16 +29,16 @@ class QuartosController extends Controller
             
             $idHotel = $request->input('idHotel');
 
-            if (empty(Hotel::find($idHotel))) {
-                return response()->json(["message" => "Hotel {$idHotel} não encontrado."], 404);
-            }
+            Hotel::findOrFail($idHotel);
 
-            $quarto = Quarto::create([
+            Quarto::create([
                 'idHotel' => $idHotel,
                 'qtdCamas' => $request->input('qtdCamas')
             ]);
     
             return response()->json(["message" => "Quarto cadastrado com sucesso!"]);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }
