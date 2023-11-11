@@ -11,6 +11,7 @@ class Quarto extends Model
 
     const DISPONIVEL = 0;
     const OCUPADO = 1;
+    const SUJO = 2;
 
     protected $fillable = [
         'idHotel', 
