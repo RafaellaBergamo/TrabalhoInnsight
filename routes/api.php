@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HoteisController;
 use App\Http\Controllers\QuartosController;
+use App\Http\Controllers\ReservasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +25,5 @@ Route::post("/quartos", [QuartosController::class, 'cadastrarQuarto']);
 Route::get("/quartos", [QuartosController::class, 'buscarQuartos']);
 Route::get("/quartos/status", [QuartosController::class, 'verificarStatusQuarto']);
 Route::put('/quartos', [QuartosController::class, 'atualizarQuarto']);
+
+Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);
