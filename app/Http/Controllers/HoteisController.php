@@ -34,13 +34,7 @@ class HoteisController extends Controller
                 'endereco' => ['required', new ValidarEndereco]
             ]);
 
-            Hotel::create([
-                'cnpj' => $request->input('cnpj'),
-                'razaoSocial' => $request->input('razaoSocial'),
-                'qtdQuartos' => $request->input('qtdQuartos'),
-                'telefone' => $request->input('telefone'),
-                'endereco' => $request->input('endereco')
-            ]);
+            Hotel::create($request->all());
     
             return response()->json(["message" => "Hotel cadastrado com sucesso!"], 201);
         } catch (ValidationException $e) {
@@ -86,13 +80,11 @@ class HoteisController extends Controller
     public function buscarHotelPorId($idHotel)
     {
         try {
-            $hotel = Hotel::find($idHotel);
-    
-            if (empty($hotel)) {
-                return response()->json(['message' => 'Hotel não encontrado.'], 404);
-            }
+            $hotel = Hotel::findOrFail($idHotel);
     
             return response()->json($hotel);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
