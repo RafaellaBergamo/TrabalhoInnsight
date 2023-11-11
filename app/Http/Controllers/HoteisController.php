@@ -22,9 +22,11 @@ class HoteisController extends Controller
     /**
      * Cadastra um hotel
      * 
+     * @param Request $request
+     * @return JsonResponse
      * @throws Exception
      */
-    public function cadastrarHotel(Request $request) 
+    public function cadastrarHotel(Request $request): JsonResponse
     {
         try {
             $request->validate([
