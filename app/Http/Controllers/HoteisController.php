@@ -14,6 +14,7 @@ use App\Rules\IsFilial;
 use App\Rules\ValidarEndereco;
 use App\Rules\ValidarTelefone;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HoteisController extends Controller
 {
@@ -60,27 +61,17 @@ class HoteisController extends Controller
 
             $idHotel = $request->input('idHotel');
 
-            $hotel = Hotel::find($idHotel);
+            $hotel = Hotel::findOrFail($idHotel);
 
-            if (empty($hotel)) {
-                return response()->json(['message' => 'Hotel não encontrado.'], 404);
-            }
-
-            $dadosAtualizados = $request->input([
-                'cnpj', 
-                'qtdQuartos', 
-                'telefone',
-                'endereco'
-            ]);
-
-            $hotel->fill($dadosAtualizados);
-            $hotel->save();
+            $hotel->update($request->all());
 
             return response()->json([
                 "message" => "Hotel atualizado com sucesso!", 
                 "data" => $hotel
             ]);
 
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
