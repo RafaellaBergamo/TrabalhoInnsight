@@ -15,13 +15,14 @@ use App\Rules\ValidarEndereco;
 use App\Rules\ValidarTelefone;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 
 class HoteisController extends Controller
 {
     /**
      * Cadastra um hotel
      * 
-     * @throws ValidationException
+     * @throws Exception
      */
     public function cadastrarHotel(Request $request) 
     {
@@ -37,12 +38,19 @@ class HoteisController extends Controller
             Hotel::create($request->all());
     
             return response()->json(["message" => "Hotel cadastrado com sucesso!"], 201);
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 422);
         }
     }
 
-    public function atualizarHotel(Request $request) 
+    /**
+     * Atualiza um hotel
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
+     */
+    public function atualizarHotel(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -75,11 +83,16 @@ class HoteisController extends Controller
      * Retorna dados de um hotel pelo id
      * 
      * @param int|null $idHotel
-     * 
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
      */
-    public function buscarHotelPorId($idHotel)
+    public function buscarHotelPorId(int $idHotel = null): JsonResponse
     {
         try {
+            if (empty($idHotel)) {
+                throw new Exception("Id do hotel não enviado.");
+            }
+
             $hotel = Hotel::findOrFail($idHotel);
     
             return response()->json($hotel);
@@ -90,7 +103,14 @@ class HoteisController extends Controller
         }
     }
 
-    public function buscarHoteis(Request $request) 
+    /**
+     * Busca hotéis, pode ser por parte do nome ou todos.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function buscarHoteis(Request $request): JsonResponse
     {
         try {
             $nomeHotel = $request->input('nomeHotel');
