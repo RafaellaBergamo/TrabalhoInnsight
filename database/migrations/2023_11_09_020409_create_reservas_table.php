@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('idHotel');
             $table->unsignedBigInteger('idHospede');
             $table->unsignedBigInteger('idQuarto');
-            $table->unsignedBigInteger('idRegistro');
             $table->date('dtEntrada');
             $table->date('dtSaida');
             $table->float('vlReserva');
@@ -27,7 +26,6 @@ return new class extends Migration
             $table->foreign('idHotel')->references('id')->on('hotels')->onDelete('cascade');
             $table->foreign('idHospede')->references('id')->on('hospedes')->onDelete('cascade');
             $table->foreign('idQuarto')->references('id')->on('quartos')->onDelete('cascade');
-            $table->foreign('idRegistro')->references('id')->on('registro_hospedes')->onDelete('cascade');
         });
     }
 

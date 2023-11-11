@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->date('dtCheckin');
             $table->date('dtCheckout')->nullable();
+            $table->unsignedBigInteger('idReserva');
             $table->timestamps();
+        });
+
+        Schema::table('registro_hospedes', function (Blueprint $table) {
+            $table->foreign('idReserva')->references('id')->on('reservas')->onDelete('cascade');
         });
     }
 
