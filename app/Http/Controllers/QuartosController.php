@@ -117,9 +117,13 @@ class QuartosController extends Controller
 
         $idQuarto = $request->input('idQuarto');
 
+        $statusQuarto = Quarto::find($idQuarto)['status'];
+
         $status = "ocupado";
-        if (QuartosHelpers::quartoDisponivel($idQuarto)) {
+        if ($statusQuarto == Quarto::DISPONIVEL) {
             $status = "disponível";
+        } else if ($statusQuarto == Quarto::SUJO) {
+            $status = "aguardando limpeza";
         }
 
         return response()->json(['message' => "O quarto {$idQuarto} está {$status}"]);
