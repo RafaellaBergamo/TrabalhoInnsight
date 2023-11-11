@@ -7,12 +7,19 @@ use App\Models\Quarto;
 use App\Models\Hotel;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class QuartosController extends Controller
 {
-    public function cadastrarQuarto(Request $request) 
+    /**
+     * Cadastra um quarto
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function cadastrarQuarto(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -37,7 +44,13 @@ class QuartosController extends Controller
         }
     }
 
-    public function atualizarQuarto(Request $request) 
+    /**
+     * Atualiza um quarto
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function atualizarQuarto(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -61,7 +74,13 @@ class QuartosController extends Controller
         }
     }
 
-    public function buscarQuartos(Request $request)
+    /**
+     * Busca quartos de um hotel
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function buscarQuartos(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -84,7 +103,13 @@ class QuartosController extends Controller
         }
     }
 
-    public function verificarStatusQuarto(Request $request) 
+    /**
+     * Retorna o status do quarto informado por parâmetro
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function verificarStatusQuarto(Request $request): JsonResponse 
     {
         $request->validate([
             'idQuarto' => 'required', 
