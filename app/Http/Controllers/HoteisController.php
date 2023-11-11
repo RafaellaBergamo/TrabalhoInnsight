@@ -35,6 +35,7 @@ class HoteisController extends Controller
 
             Hotel::create([
                 'cnpj' => $request->input('cnpj'),
+                'razaoSocial' => $request->input('razaoSocial'),
                 'qtdQuartos' => $request->input('qtdQuartos'),
                 'telefone' => $request->input('telefone'),
                 'endereco' => $request->input('endereco')
