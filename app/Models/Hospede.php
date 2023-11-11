@@ -9,5 +9,11 @@ class Hospede extends Model
 {
     use HasFactory;
 
-    
+    protected $fillable = [
+        'nome', 
+        'cpf',
+        'telefone',
+        'email'
+    ];
+
 }
