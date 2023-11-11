@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\QuartosHelpers;
 use App\Models\Quarto;
 use App\Models\Hotel;
 use Exception;
@@ -24,7 +23,8 @@ class QuartosController extends Controller
         try {
             $request->validate([
                 'idHotel' => 'required|integer', 
-                'qtdCamas' => 'required|integer'
+                'qtdCamas' => 'required|integer',
+                'capacidade' => 'required|integer|min:1'
             ]);
             
             $idHotel = $request->input('idHotel');

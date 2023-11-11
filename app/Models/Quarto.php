@@ -16,6 +16,7 @@ class Quarto extends Model
     protected $fillable = [
         'idHotel', 
         'qtdCamas',
+        'capacidade'
         'status'
     ];
 
