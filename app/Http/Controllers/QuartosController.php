@@ -6,34 +6,12 @@ use App\Helpers\QuartosHelpers;
 use App\Models\Quarto;
 use App\Models\Hotel;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class QuartosController extends Controller
 {
-    public function buscarQuartos(Request $request)
-    {
-        try {
-            $request->validate([
-                'idHotel' => 'required|integer', 
-                'idQuarto' => 'integer|nullable'
-            ]);
-    
-            $idHotel = $request->input('idHotel');
-            $idQuarto = $request->input('idQuarto');
-
-            $quartos = Quarto::buscarQuartos($idHotel, $idQuarto);
-
-            if (empty($quartos)) {
-                return response()->json(['message' => 'Hotel informado não possui quarto cadastrado.'], 404);
-            }
-    
-            return response()->json($quartos);
-        } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 500);
-        }
-    }
-
     public function cadastrarQuarto(Request $request) 
     {
         try {
@@ -61,29 +39,49 @@ class QuartosController extends Controller
 
     public function atualizarQuarto(Request $request) 
     {
-        $request->validate([
-            'idQuarto' => 'required|integer',
-            'qtdCamas' => 'integer',
-            'status' => 'integer'
-        ]);
-
-        $idQuarto = $request->input('idQuarto');
-
-        $quarto = Quarto::find($idQuarto);
-
-        if (!$quarto) {
-            return response()->json(['message' => 'Quarto não encontrado.'], 404);
+        try {
+            $request->validate([
+                'idQuarto' => 'required|integer',
+                'qtdCamas' => 'integer',
+                'status' => 'integer'
+            ]);
+    
+            $idQuarto = $request->input('idQuarto');
+    
+            $quarto = Quarto::findOrFail($idQuarto);
+    
+            $quarto->update($quarto);
+    
+            return response()->json([
+                "message" => "Quarto atualizado com sucesso!",
+                "data" => $quarto
+            ]);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(["errors" => "Quarto não encontrado."], 404);
         }
+    }
 
-        $dadosAtualizados = $request->input(['qtdCamas', 'status']);
+    public function buscarQuartos(Request $request)
+    {
+        try {
+            $request->validate([
+                'idHotel' => 'required|integer', 
+                'idQuarto' => 'integer|nullable'
+            ]);
+    
+            $idHotel = $request->input('idHotel');
+            $idQuarto = $request->input('idQuarto');
 
-        $quarto->fill($dadosAtualizados);
-        $quarto->save();
+            $quartos = Quarto::buscarQuartos($idHotel, $idQuarto);
 
-        return response()->json([
-            "message" => "Quarto atualizado com sucesso!",
-            "data" => $quarto
-        ]);
+            if (empty($quartos)) {
+                return response()->json(['message' => 'Hotel informado não possui quarto cadastrado.'], 404);
+            }
+    
+            return response()->json($quartos);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
     }
 
     public function verificarStatusQuarto(Request $request) 
