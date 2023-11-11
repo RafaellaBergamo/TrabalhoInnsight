@@ -56,7 +56,30 @@ class HospedeController extends Controller
 
             return response()->json($hospede);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return response()->json(['errors' => $e->getMessage()], 422);
+        }
+    }
+
+    /**
+     * Busca hóspedes por parte do nome
+     * 
+     * @param int $idHospede
+     * @return JsonResponse
+     */
+    public function buscarHospedePorNome(Request $request): JsonResponse
+    {
+        try {
+            $nomeHospede = $request->input('nomeHospede');
+
+            $hospede = Hospede::where("nome", "like", "{$nomeHospede}%")->get();
+
+            if (empty(count($hospede))) {
+                return response()->json(['message' => 'Hóspede não encontrado.'], 404);
+            }
+
+            return response()->json($hospede);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 422);
         }
     }
 }
