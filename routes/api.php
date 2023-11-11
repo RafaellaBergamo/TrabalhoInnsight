@@ -28,5 +28,6 @@ Route::get("/quartos/status", [QuartosController::class, 'verificarStatusQuarto'
 Route::put('/quartos', [QuartosController::class, 'atualizarQuarto']);
 
 Route::post('/hospedes', [HospedeController::class, 'cadastrarHospede']);
+Route::get('/hospedes/{id}', [HospedeController::class, 'buscarHospedePorId']);
 
 Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);

@@ -7,7 +7,10 @@ use App\Rules\ApenasNumeros;
 use App\Rules\CpfCnpjUnico;
 use App\Rules\ValidarCpfCnpj;
 use App\Rules\ValidarTelefone;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class HospedeController extends Controller
@@ -26,6 +29,27 @@ class HospedeController extends Controller
     
             return response()->json(["message" => "Hóspede cadastrado com sucesso!"], 201);
         } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+    }
+
+    /**
+     * Busca hóspedes pelo id do hóspede
+     * 
+     * @param int $idHospede
+     * @return JsonResponse
+     */
+    public function buscarHospedePorId(int $idHospede): JsonResponse
+    {
+        try {
+            $hospede = Hospede::find($idHospede);
+    
+            if (empty($hospede)) {
+                return response()->json(['message' => 'Hóspede não encontrado.'], 404);
+            }
+
+            return response()->json($hospede);
+        } catch (Exception $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }
     }
