@@ -15,7 +15,13 @@ use Illuminate\Validation\ValidationException;
 
 class HospedeController extends Controller
 {
-    public function cadastrarHospede(Request $request) 
+    /**
+     * Cadastra um hóspede
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function cadastrarHospede(Request $request): JsonResponse
     {
         try {
             $request->validate([
