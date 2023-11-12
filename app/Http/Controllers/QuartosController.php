@@ -31,16 +31,15 @@ class QuartosController extends Controller
 
             Hotel::findOrFail($idHotel);
 
-            Quarto::create([
-                'idHotel' => $idHotel,
-                'qtdCamas' => $request->input('qtdCamas')
-            ]);
+            Quarto::create($request->all());
     
             return response()->json(["message" => "Quarto cadastrado com sucesso!"]);
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
 
@@ -54,16 +53,23 @@ class QuartosController extends Controller
     {
         try {
             $request->validate([
+                'idHotel' => 'required|integer',
                 'idQuarto' => 'required|integer',
                 'qtdCamas' => 'integer',
+                'capacidade' => 'integer|min:1',
                 'status' => 'integer'
             ]);
-    
+
             $idQuarto = $request->input('idQuarto');
+            $idHotel = $request->input('idHotel');
     
-            $quarto = Quarto::findOrFail($idQuarto);
-    
-            $quarto->update($quarto);
+            $quarto = Quarto::buscarQuartos($idHotel, $idQuarto)->first();
+
+            if (empty($quarto)) {
+                throw new Exception("Hotel informado não possui quarto cadastrado.", 404);
+            }
+
+            $quarto->save($request->all());
     
             return response()->json([
                 "message" => "Quarto atualizado com sucesso!",
@@ -71,6 +77,10 @@ class QuartosController extends Controller
             ]);
         } catch (ModelNotFoundException $ex) {
             return response()->json(["errors" => "Quarto não encontrado."], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
 
@@ -103,29 +113,22 @@ class QuartosController extends Controller
         }
     }
 
-    /**
-     * Retorna o status do quarto informado por parâmetro
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function verificarStatusQuarto(Request $request): JsonResponse 
+    public function buscarQuartosComOStatus(string $statusQuarto) 
     {
-        $request->validate([
-            'idQuarto' => 'required', 
-        ]);
-
-        $idQuarto = $request->input('idQuarto');
-
-        $statusQuarto = Quarto::find($idQuarto)['status'];
-
-        $status = "ocupado";
-        if ($statusQuarto == Quarto::DISPONIVEL) {
-            $status = "disponível";
-        } else if ($statusQuarto == Quarto::SUJO) {
-            $status = "aguardando limpeza";
+        $estadosPermitidos = [
+            'disponiveis' => Quarto::DISPONIVEL,
+            'ocupados' => Quarto::OCUPADO,
+            'sujos' => Quarto::SUJO,
+        ];
+    
+        // Verifica se o status fornecido é válido
+        if (!isset($estadosPermitidos[$statusQuarto])) {
+            return response()->json(['error' => 'Status de quarto inválido.'], 400);
         }
-
-        return response()->json(['message' => "O quarto {$idQuarto} está {$status}"]);
+    
+        // Realiza a consulta no banco de dados usando o status mapeado
+        $quartos = Quarto::where('status', '=', $estadosPermitidos[$statusQuarto])->get();
+    
+        return response()->json($quartos);
     }
 }
