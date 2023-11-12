@@ -12,13 +12,15 @@ class Funcionario extends Model
     const STATUS_ATIVO = 1;
     const STATUS_INATIVO = 0;
     const COMUM = 0;
-    const MASTER = 1;
+    const GOVERNANCA = 1;
+    const MASTER = 2;
 
     protected $fillable = [
         'nome', 
         'cpf', 
         'status',
         'tipo',
-        'idHotel'
+        'idHotel',
+        'email'
     ];
 }
