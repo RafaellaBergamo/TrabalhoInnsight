@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,5 +31,25 @@ class Quarto extends Model
         }
 
         return $query->get();
+    }
+
+        /**
+     * Atualiza os dados do quarto informado
+     * 
+     * @param int $idQuarto
+     * @param int $idHotel
+     * @param array $dados
+     */
+    public static function atualizarDadosQuarto(int $idQuarto, int $idHotel, array $dados) 
+    {
+        $quarto = Quarto::buscarQuartos($idHotel, $idQuarto)->first();
+
+        if (empty($quarto)) {
+            throw new Exception("Hotel informado não possui quarto cadastrado.", 404);
+        }
+
+        $quarto->update($dados);
+
+        return $quarto;
     }
 }

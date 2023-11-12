@@ -63,17 +63,11 @@ class QuartosController extends Controller
             $idQuarto = $request->input('idQuarto');
             $idHotel = $request->input('idHotel');
     
-            $quarto = Quarto::buscarQuartos($idHotel, $idQuarto)->first();
-
-            if (empty($quarto)) {
-                throw new Exception("Hotel informado não possui quarto cadastrado.", 404);
-            }
-
-            $quarto->save($request->all());
+            $quartoAtualizado = Quarto::atualizarDadosQuarto($idQuarto, $idHotel, $request->all());
     
             return response()->json([
                 "message" => "Quarto atualizado com sucesso!",
-                "data" => $quarto
+                "data" => $quartoAtualizado
             ]);
         } catch (ModelNotFoundException $ex) {
             return response()->json(["errors" => "Quarto não encontrado."], 404);
