@@ -33,7 +33,25 @@ class Quarto extends Model
         return $query->get();
     }
 
-        /**
+    public static function buscarQuartosPelaCapacidade(int $idHotel, int $idQuarto, int $capacidade) 
+    {
+        $query = Quarto::query();
+        return $query->where('idHotel', '=', $idHotel)
+            ->where('idQuarto', '=', $idQuarto)
+            ->where('capacidade', '=', $capacidade)
+            ->get();
+    }
+
+    public static function buscarCapacidadeDoQuarto(int $idHotel, int $idQuarto, int $capacidade) 
+    {
+        $query = Quarto::query();
+        return $query->where('idHotel', '=', $idHotel)
+            ->where('idQuarto', '=', $idQuarto)
+            ->where('capacidade', '=', $capacidade)
+            ->get();
+    }
+
+    /**
      * Atualiza os dados do quarto informado
      * 
      * @param int $idQuarto
