@@ -9,11 +9,19 @@ use App\Rules\ValidarData;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReservasController extends Controller
 {
-    public function cadastrarReserva(Request $request) 
+    /**
+     * Cadastra uma reserva
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function cadastrarReserva(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -50,6 +58,53 @@ class ReservasController extends Controller
         }
     }
 
+    /**
+     * Atualiza uma reserva
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
+     */
+    public function atualizarReserva(Request $request) 
+    {
+        try {
+            $request->validate([
+                'idReserva' => 'required|integer',
+                'idHotel' => 'integer', 
+                'idHospede' => 'integer',
+                'idQuarto' => 'integer',
+                'qtdHospedes' => 'integer',
+                'dtEntrada' => new ValidarData,
+                'dtSaida' => new ValidarData,
+                'vlReserva' => 'numeric'
+            ]);
+
+
+            $idReserva = $request->input('idReserva');
+
+            $reserva = Reserva::findOrFail($idReserva);
+
+            $reserva->update($request->all());
+
+            return response()->json([
+                "message" => "Reserva atualizada com sucesso!", 
+                "data" => $reserva
+            ]);
+
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Reserva não encontrada.'], 404);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Busca uma reserva por id
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
+     */
     public function buscarReserva(int $idReserva) 
     {
         try {

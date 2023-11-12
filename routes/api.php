@@ -34,3 +34,4 @@ Route::put('/hospedes', [HospedeController::class, 'atualizarHospede']);
 
 Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);
 Route::get("/reservas/{id}", [ReservasController::class, 'buscarReserva']);
+Route::put('/reservas', [ReservasController::class, 'atualizarReserva']);
