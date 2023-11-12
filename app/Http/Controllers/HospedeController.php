@@ -83,13 +83,11 @@ class HospedeController extends Controller
     public function buscarHospedePorId(int $idHospede): JsonResponse
     {
         try {
-            $hospede = Hospede::find($idHospede);
-    
-            if (empty($hospede)) {
-                return response()->json(['message' => 'Hóspede não encontrado.'], 404);
-            }
+            $hospede = Hospede::findOrFail($idHospede);
 
             return response()->json($hospede);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Hóspede não encontrado.'], 404);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 422);
         }

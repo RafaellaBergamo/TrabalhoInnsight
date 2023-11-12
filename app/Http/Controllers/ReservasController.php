@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\HoteisHelper;
 use App\Helpers\QuartosHelper;
 use App\Helpers\ReservasHelper;
 use App\Models\Reserva;
 use App\Rules\ValidarData;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ReservasController extends Controller
@@ -33,7 +33,6 @@ class ReservasController extends Controller
             $idHotel = $request->input('idHotel');
             $qtdHospedes = $request->input('qtdHospedes');
 
-            HoteisHelper::hotelDisponivel($idHotel);
             QuartosHelper::validarQuarto($idQuarto, $idHotel, $qtdHospedes);
             ReservasHelper::validarCamposDeData($dtEntrada, $dtSaida);
 
@@ -54,13 +53,11 @@ class ReservasController extends Controller
     public function buscarReserva(int $idReserva) 
     {
         try {
-            $reserva = Reserva::where("idReserva", "=", $idReserva);
-    
-            if (empty($reserva)) {
-                return response()->json(['message' => 'Reserva não encontrada.'], 404);
-            }
+            $reserva = Reserva::findOrFail($idReserva);
     
             return response()->json($reserva);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['errors' => "Reserva não encontrada"], 500);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
