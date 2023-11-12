@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('funcionarios', function (Blueprint $table) {
             $table->id();
+            $table->string('nome');
             $table->string('cpf');
             $table->boolean('status')->default(Funcionario::STATUS_ATIVO);
             $table->integer('tipo')->default(Funcionario::COMUM);
+            $table->string('email');
             $table->unsignedBigInteger('idHotel');
             $table->timestamps();
         });

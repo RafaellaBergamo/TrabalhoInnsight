@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DocumentoHelper;
+use App\Helpers\FuncionariosHelper;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 use App\Models\Hotel;
 use App\Rules\ApenasNumeros;
@@ -128,6 +127,31 @@ class HoteisController extends Controller
             }
     
             return response()->json($hotel);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Busca todos os funcionários que fazem parte da governança do hotel
+     * 
+     * @return JsonResponse
+     */
+    public function buscarGovernancaDoHotel(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'idHotel' => 'required|integer'
+            ]);
+
+            $idHotel = $request->input('idHotel');
+            $funcionarios = FuncionariosHelper::buscarGovernanca($idHotel);
+    
+            if (empty(count($funcionarios))) {
+                return response()->json(['errors' => "Esse hotel não possui governança."], 500);
+            }
+
+            return response()->json($funcionarios);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }

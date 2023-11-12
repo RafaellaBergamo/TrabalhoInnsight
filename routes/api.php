@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FuncionariosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HoteisController;
 use App\Http\Controllers\QuartosController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\HospedeController;
 Route::post('/hoteis', [HoteisController::class, 'cadastrarHotel']);
 Route::get('/hoteis', [HoteisController::class, 'buscarHoteis']);
 Route::get('/hoteis/{id}', [HoteisController::class, 'buscarHotelPorId']);
+Route::get("/hoteis/governanca", [HoteisController::class, 'buscarGovernancaDoHotel']);
 Route::put('/hoteis/{nomeHotel?}', [HoteisController::class, 'atualizarHotel']);
 
 Route::post("/quartos", [QuartosController::class, 'cadastrarQuarto']);
@@ -35,3 +37,8 @@ Route::put('/hospedes', [HospedeController::class, 'atualizarHospede']);
 Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);
 Route::get("/reservas/{id}", [ReservasController::class, 'buscarReserva']);
 Route::put('/reservas', [ReservasController::class, 'atualizarReserva']);
+
+Route::post("/funcionarios", [FuncionariosController::class, 'cadastrarFuncionario']);
+Route::get("/funcionarios/{id}", [FuncionariosController::class, 'buscarFuncionario']);
+Route::get("/funcionarios/hotel", [FuncionariosController::class, 'buscarFuncionarioDoHotel']);
+Route::put('/funcionarios', [FuncionariosController::class, 'atualizarFuncionario']);
