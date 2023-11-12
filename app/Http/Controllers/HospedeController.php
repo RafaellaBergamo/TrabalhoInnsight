@@ -64,7 +64,8 @@ class HospedeController extends Controller
             $hospede->update($request->all());
 
             return response()->json([
-                "message" => "Hóspede atualizado com sucesso!"
+                "message" => "Hóspede atualizado com sucesso!",
+                "data" => $hospede
             ]);
 
         } catch (ModelNotFoundException $ex) {
