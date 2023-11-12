@@ -144,6 +144,8 @@ return [
         // 'store' => 'redis',
     ],
 
+    'date' => 'd/m/Y H:i:s',
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
