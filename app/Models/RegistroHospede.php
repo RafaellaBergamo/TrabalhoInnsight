@@ -11,7 +11,6 @@ class RegistroHospede extends Model
 
     protected $fillable = [
         'idReserva',
-        'idHospede',
         'dtCheckin',
         'dtCheckout'
     ];
