@@ -45,8 +45,6 @@ class QuartosController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
-        } finally {
-            DB::closeConnection();
         }
     }
 
