@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\QuartosHelper;
 use App\Helpers\ReservasHelper;
+use App\Models\Pagamento;
 use App\Models\Reserva;
 use App\Rules\ValidarData;
 use Carbon\Carbon;
@@ -55,6 +56,7 @@ class ReservasController extends Controller
 
             $reserva = Reserva::create($request->all());
 
+            Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
             ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
             DB::commit();
