@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservasController extends Controller
 {
@@ -24,6 +25,8 @@ class ReservasController extends Controller
     public function cadastrarReserva(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+            
             $request->validate([
                 'idHotel' => 'required|integer', 
                 'idHospede' => 'required|integer',
@@ -40,6 +43,7 @@ class ReservasController extends Controller
             $idQuarto = $request->input('idQuarto');
             $idHotel = $request->input('idHotel');
             $qtdHospedes = $request->input('qtdHospedes');
+            $idHospede = $request->input('idHospede');
 
             QuartosHelper::validarQuarto($idQuarto, $idHotel, $qtdHospedes);
             ReservasHelper::validarCamposDeData($dtEntrada, $dtSaida);
@@ -49,11 +53,14 @@ class ReservasController extends Controller
                 'dtSaida' => Carbon::createFromFormat('Y-m-d H:i:s', $dtSaida)
             ]);
 
+            $reserva = Reserva::create($request->all());
 
-            Reserva::create($request->all());
+            ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
-            return response()->json(["message" => "Reserva cadastrada com sucesso!"], 201);
+            DB::commit();
+            return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
@@ -68,6 +75,8 @@ class ReservasController extends Controller
     public function atualizarReserva(Request $request) 
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
                 'idReserva' => 'required|integer',
                 'idHotel' => 'integer', 
@@ -86,6 +95,7 @@ class ReservasController extends Controller
 
             $reserva->update($request->all());
 
+            DB::commit();
             return response()->json([
                 "message" => "Reserva atualizada com sucesso!", 
                 "data" => $reserva
@@ -94,7 +104,10 @@ class ReservasController extends Controller
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Reserva não encontrada.'], 404);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
+        } finally {
+            DB::closeConnection();
         }
     }
 

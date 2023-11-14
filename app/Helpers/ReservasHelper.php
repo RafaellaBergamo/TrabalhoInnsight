@@ -2,9 +2,12 @@
 
 namespace App\Helpers;
 
-
+use App\Mail\ConfirmacaoReserva;
+use App\Models\Hospede;
+use App\Models\Reserva;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 
 class ReservasHelper
 {
@@ -28,5 +31,18 @@ class ReservasHelper
         }
 
         return;
+    }
+
+    /**
+     * Envia um email de confirmação de reserva para o hóspede
+     * 
+     * @param int $idHospede
+     * @return void
+     */
+    public static function enviarConfirmacaoReserva(int $idHospede, Reserva $reserva) 
+    {
+        $hospede = Hospede::find($idHospede);
+
+        Mail::to($hospede['email'])->send(new ConfirmacaoReserva($hospede['nome'], $reserva));
     }
 }
