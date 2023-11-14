@@ -126,22 +126,37 @@ class QuartosController extends Controller
      * @param string $statusQuarto
      * @return JsonResponse
      */
-    public function buscarQuartosComOStatus(string $statusQuarto): JsonResponse 
+    public function buscarQuartosComOStatus(Request $request): JsonResponse 
     {
-        $estadosPermitidos = [
-            'disponiveis' => Quarto::DISPONIVEL,
-            'ocupados' => Quarto::OCUPADO,
-            'sujos' => Quarto::SUJO,
-        ];
-    
-        // Verifica se o status fornecido é válido
-        if (!isset($estadosPermitidos[$statusQuarto])) {
-            return response()->json(['error' => 'Status de quarto inválido.'], 400);
-        }
+        try {
+            $request->validate([
+                'idHotel' => 'required|integer', 
+                'status' => 'string|required'
+            ]);
 
-        // Realiza a consulta no banco de dados usando o status mapeado
-        $quartos = Quarto::where('status', '=', $estadosPermitidos[$statusQuarto])->get();
-    
-        return response()->json($quartos);
+            $estadosPermitidos = [
+                'disponiveis' => Quarto::DISPONIVEL,
+                'ocupados' => Quarto::OCUPADO,
+                'sujos' => Quarto::SUJO,
+            ];
+
+            $statusQuarto = $request->input('status');
+            $idHotel = $request->input('idHotel');
+
+            // Verifica se o status fornecido é válido
+            if (!isset($estadosPermitidos[$statusQuarto])) {
+                return response()->json(['error' => 'Status de quarto inválido.'], 400);
+            }
+
+            $quartos = Quarto::query()->where('idHotel', '=', $idHotel)
+                ->where('status', '=', $estadosPermitidos[$statusQuarto])
+                ->get();
+
+            return response()->json($quartos);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
