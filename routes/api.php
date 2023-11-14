@@ -6,6 +6,7 @@ use App\Http\Controllers\HoteisController;
 use App\Http\Controllers\QuartosController;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\HospedeController;
+use App\Http\Controllers\RegistrosHospedesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,3 +43,6 @@ Route::post("/funcionarios", [FuncionariosController::class, 'cadastrarFuncionar
 Route::get("/funcionarios/{id}", [FuncionariosController::class, 'buscarFuncionario']);
 Route::get("/funcionarios/hotel", [FuncionariosController::class, 'buscarFuncionarioDoHotel']);
 Route::put('/funcionarios', [FuncionariosController::class, 'atualizarFuncionario']);
+
+Route::post("/registros/checkin", [RegistrosHospedesController::class, 'registrarCheckin']);
+Route::post("/registros/checkout", [RegistrosHospedesController::class, 'registrarCheckout']);
