@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class HospedeController extends Controller
@@ -25,6 +25,7 @@ class HospedeController extends Controller
     public function cadastrarHospede(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $request->validate([
                 'nome' => 'required|string',
                 'cpf' => ['required',  new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
@@ -33,10 +34,14 @@ class HospedeController extends Controller
             ]);
 
             Hospede::create($request->all());
-    
+            
+            DB::commit();
             return response()->json(["message" => "Hóspede cadastrado com sucesso!"], 201);
         } catch (ValidationException $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->errors()], 422);
+        } finally {
+            DB::closeConnection();
         }
     }
 
@@ -49,6 +54,8 @@ class HospedeController extends Controller
     public function atualizarHospede(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
                 'idHospede' => 'required',
                 'nome' => 'string', 
@@ -63,6 +70,7 @@ class HospedeController extends Controller
 
             $hospede->update($request->all());
 
+            DB::commit();
             return response()->json([
                 "message" => "Hóspede atualizado com sucesso!",
                 "data" => $hospede
@@ -71,7 +79,10 @@ class HospedeController extends Controller
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Hóspede não encontrado.'], 404);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
+        }  finally {
+            DB::closeConnection();
         }
     }
 
@@ -91,7 +102,7 @@ class HospedeController extends Controller
             return response()->json(['errors' => 'Hóspede não encontrado.'], 404);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 422);
-        }
+        } 
     }
 
     /**
