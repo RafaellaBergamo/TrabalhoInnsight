@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class HoteisController extends Controller
 {
@@ -43,11 +44,11 @@ class HoteisController extends Controller
             
             DB::commit();
             return response()->json(["message" => "Hotel cadastrado com sucesso!"], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json(['errors' => $e->getMessage()], 422);
-        }  finally {
-            DB::closeConnection();
+            return response()->json(['error' => $e->getMessage()], 422);
         }
     }
 
@@ -89,8 +90,6 @@ class HoteisController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
-        } finally {
-            DB::closeConnection();
         }
     }
 
