@@ -34,7 +34,7 @@ class ValidarCpfCnpj implements Rule
     static function cpfValido(string $cpf): bool
     {
        // Remova formatação (pontos e traços) do CPF
-       $cpf = preg_replace('/[^0-9]/', '', $value);
+       $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
        // Verifique se o CPF tem 11 dígitos
        if (strlen($cpf) !== 11) {
@@ -89,7 +89,7 @@ class ValidarCpfCnpj implements Rule
         }
     }
 
-    private function calcularDigitoVerificadorCpf($base, $posicao)
+    static function calcularDigitoVerificadorCpf($base, $posicao)
     {
         $soma = 0;
 

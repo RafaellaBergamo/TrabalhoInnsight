@@ -27,6 +27,9 @@ class IsFilial implements Rule
 
     public static function isFilial(string $cnpj) 
     {
+        if (empty(Hotel::count())) {
+            return true;
+        }
 
         $cnpjComparar = Hotel::select('cnpj')->first();
 

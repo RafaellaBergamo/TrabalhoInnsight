@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DocumentoHelper;
+use App\Helpers\FuncionariosHelper;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 use App\Models\Hotel;
 use App\Rules\ApenasNumeros;
@@ -14,43 +13,60 @@ use App\Rules\IsFilial;
 use App\Rules\ValidarEndereco;
 use App\Rules\ValidarTelefone;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class HoteisController extends Controller
 {
     /**
      * Cadastra um hotel
      * 
-     * @throws ValidationException
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function cadastrarHotel(Request $request) 
+    public function cadastrarHotel(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
-                'cnpj' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico, new IsFilial],
+                'cnpj' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'razaoSocial' => 'required|string',
                 'qtdQuartos' => 'required|integer',
                 'telefone' => ['required', new ValidarTelefone, new ApenasNumeros],
                 'endereco' => ['required', new ValidarEndereco]
             ]);
 
-            Hotel::create([
-                'cnpj' => $request->input('cnpj'),
-                'qtdQuartos' => $request->input('qtdQuartos'),
-                'telefone' => $request->input('telefone'),
-                'endereco' => $request->input('endereco')
-            ]);
-    
+            Hotel::create($request->all());
+            
+            DB::commit();
             return response()->json(["message" => "Hotel cadastrado com sucesso!"], 201);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 422);
         }
     }
 
-    public function atualizarHotel(Request $request) 
+    /**
+     * Atualiza um hotel
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
+     */
+    public function atualizarHotel(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
-                'idHotel' => 'required', 
+                'idHotel' => 'required',
+                'razaoSocial' => 'string',
                 'cnpj' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico, new IsFilial],
                 'qtdQuartos' => 'integer',
                 'telefone' => [new ValidarTelefone, new ApenasNumeros],
@@ -59,28 +75,20 @@ class HoteisController extends Controller
 
             $idHotel = $request->input('idHotel');
 
-            $hotel = Hotel::find($idHotel);
+            $hotel = Hotel::findOrFail($idHotel);
 
-            if (empty($hotel)) {
-                return response()->json(['message' => 'Hotel não encontrado.'], 404);
-            }
+            $hotel->update($request->all());
 
-            $dadosAtualizados = $request->input([
-                'cnpj', 
-                'qtdQuartos', 
-                'telefone',
-                'endereco'
-            ]);
-
-            $hotel->fill($dadosAtualizados);
-            $hotel->save();
-
+            DB::commit();
             return response()->json([
                 "message" => "Hotel atualizado com sucesso!", 
                 "data" => $hotel
             ]);
 
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
@@ -89,24 +97,34 @@ class HoteisController extends Controller
      * Retorna dados de um hotel pelo id
      * 
      * @param int|null $idHotel
-     * 
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
      */
-    public function buscarHotelPorId($idHotel)
+    public function buscarHotelPorId(int $idHotel = null): JsonResponse
     {
         try {
-            $hotel = Hotel::find($idHotel);
-    
-            if (empty($hotel)) {
-                return response()->json(['message' => 'Hotel não encontrado.'], 404);
+            if (empty($idHotel)) {
+                throw new Exception("Id do hotel não enviado.");
             }
+
+            $hotel = Hotel::findOrFail($idHotel);
     
             return response()->json($hotel);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
 
-    public function buscarHoteis(Request $request) 
+    /**
+     * Busca hotéis, pode ser por parte do nome ou todos.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function buscarHoteis(Request $request): JsonResponse
     {
         try {
             $nomeHotel = $request->input('nomeHotel');
@@ -122,6 +140,31 @@ class HoteisController extends Controller
             }
     
             return response()->json($hotel);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Busca todos os funcionários que fazem parte da governança do hotel
+     * 
+     * @return JsonResponse
+     */
+    public function buscarGovernancaDoHotel(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'idHotel' => 'required|integer'
+            ]);
+
+            $idHotel = $request->input('idHotel');
+            $funcionarios = FuncionariosHelper::buscarGovernanca($idHotel);
+    
+            if (empty(count($funcionarios))) {
+                return response()->json(['errors' => "Esse hotel não possui governança."], 500);
+            }
+
+            return response()->json($funcionarios);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }

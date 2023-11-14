@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\QuartosHelper;
-use App\Helpers\ReservasHelper;
 use App\Models\Pagamento;
 use App\Models\Reserva;
 use App\Rules\ValidarData;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ReservasController extends Controller
+class PagamentosController extends Controller
 {
     /**
      * Cadastra uma reserva
@@ -23,41 +22,34 @@ class ReservasController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function cadastrarReserva(Request $request): JsonResponse
+    public function realizarPagamento(Request $request): JsonResponse
     {
         try {
             DB::beginTransaction();
             
             $request->validate([
-                'idHotel' => 'required|integer', 
-                'idHospede' => 'required|integer',
-                'idQuarto' => 'required|integer',
-                'qtdHospedes' => 'required|integer',
-                'dtEntrada' => ['required', new ValidarData],
-                'dtSaida' => ['required', new ValidarData],
-                'vlReserva' => 'required|numeric'
+                'idReserva' => 'required|integer',
+                'formaPagamento' => 'required|string',
+                'dtPagamento' => Carbon::now()
             ]);
 
-            $dtEntrada = Carbon::createFromFormat('d/m/Y', $request->input('dtEntrada'))->timezone('America/Sao_Paulo');
-            $dtSaida =  Carbon::createFromFormat('d/m/Y', $request->input('dtSaida'))->timezone('America/Sao_Paulo');
+            $formaPagamento = $request->input('formaPagamento');
+            $dtPagamento = $request->input('dtPagamento');
 
-            $idQuarto = $request->input('idQuarto');
-            $idHotel = $request->input('idHotel');
-            $qtdHospedes = $request->input('qtdHospedes');
-            $idHospede = $request->input('idHospede');
+            if (!Pagamento::formaPagamentoValida($formaPagamento)) {
+                throw new Exception("As formas de pagamento permitidas são: BOLETO, CARTAO_CREDITO, CARTA_DEBITO ou DINHEIRO");
+            }
 
-            QuartosHelper::validarQuarto($idQuarto, $idHotel, $qtdHospedes);
-            ReservasHelper::validarCamposDeData($dtEntrada, $dtSaida);
+            $pagamento = Pagamento::where("idReserva", '=', $request->input('idReserva'));
 
-            $request->merge([
-                'dtEntrada' => Carbon::createFromFormat('Y-m-d H:i:s', $dtEntrada),
-                'dtSaida' => Carbon::createFromFormat('Y-m-d H:i:s', $dtSaida)
+            if (empty(count($pagamento))) {
+                throw new Exception("Pagamento não pode ser efetuado. Por favor, verifique se o id da reserva está correto.");
+            }
+
+            $pagamento->update([
+                'formaPagamento' => $formaPagamento,
+                'dtPagamento' => $dtPagamento
             ]);
-
-            $reserva = Reserva::create($request->all());
-
-            Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
-            ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
             DB::commit();
             return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);

@@ -2,16 +2,100 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\QuartosHelpers;
 use App\Models\Quarto;
 use App\Models\Hotel;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class QuartosController extends Controller
 {
-    public function buscarQuartos(Request $request)
+    /**
+     * Cadastra um quarto
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function cadastrarQuarto(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'idHotel' => 'required|integer', 
+                'qtdCamas' => 'required|integer|min:1',
+                'capacidade' => 'required|integer|min:1'
+            ]);
+            
+            $idHotel = $request->input('idHotel');
+
+            Hotel::findOrFail($idHotel);
+
+            Quarto::create($request->all());
+    
+            DB::commit();
+            return response()->json(["message" => "Quarto cadastrado com sucesso!"]);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['error' => 'Hotel não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Atualiza um quarto
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function atualizarQuarto(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'idHotel' => 'required|integer',
+                'idQuarto' => 'required|integer',
+                'qtdCamas' => 'integer',
+                'capacidade' => 'integer|min:1',
+                'status' => 'integer'
+            ]);
+
+            $idQuarto = $request->input('idQuarto');
+            $idHotel = $request->input('idHotel');
+    
+            $quartoAtualizado = Quarto::atualizarDadosQuarto($idQuarto, $idHotel, $request->all());
+    
+            DB::commit();
+            return response()->json([
+                "message" => "Quarto atualizado com sucesso!",
+                "data" => $quartoAtualizado
+            ]);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(["error" => "Quarto não encontrado."], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        } finally {
+            DB::closeConnection();
+        }
+    }
+
+    /**
+     * Busca quartos de um hotel
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function buscarQuartos(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -30,75 +114,47 @@ class QuartosController extends Controller
     
             return response()->json($quartos);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function cadastrarQuarto(Request $request) 
+    /**
+     * Retorna os quartos com o status enviado por parametro
+     * 
+     * @param string $statusQuarto
+     * @return JsonResponse
+     */
+    public function buscarQuartosComOStatus(Request $request): JsonResponse 
     {
         try {
             $request->validate([
                 'idHotel' => 'required|integer', 
-                'qtdCamas' => 'required|integer'
+                'status' => 'string|required'
             ]);
-            
+
+            $estadosPermitidos = [
+                'disponiveis' => Quarto::DISPONIVEL,
+                'ocupados' => Quarto::OCUPADO,
+                'sujos' => Quarto::SUJO,
+            ];
+
+            $statusQuarto = $request->input('status');
             $idHotel = $request->input('idHotel');
 
-            if (empty(Hotel::find($idHotel))) {
-                return response()->json(["message" => "Hotel {$idHotel} não encontrado."], 404);
+            // Verifica se o status fornecido é válido
+            if (!isset($estadosPermitidos[$statusQuarto])) {
+                return response()->json(['error' => 'Status de quarto inválido.'], 400);
             }
 
-            $quarto = Quarto::create([
-                'idHotel' => $idHotel,
-                'qtdCamas' => $request->input('qtdCamas')
-            ]);
-    
-            return response()->json(["message" => "Quarto cadastrado com sucesso!"]);
+            $quartos = Quarto::query()->where('idHotel', '=', $idHotel)
+                ->where('status', '=', $estadosPermitidos[$statusQuarto])
+                ->get();
+
+            return response()->json($quartos);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    public function atualizarQuarto(Request $request) 
-    {
-        $request->validate([
-            'idQuarto' => 'required|integer',
-            'qtdCamas' => 'integer',
-            'status' => 'integer'
-        ]);
-
-        $idQuarto = $request->input('idQuarto');
-
-        $quarto = Quarto::find($idQuarto);
-
-        if (!$quarto) {
-            return response()->json(['message' => 'Quarto não encontrado.'], 404);
-        }
-
-        $dadosAtualizados = $request->input(['qtdCamas', 'status']);
-
-        $quarto->fill($dadosAtualizados);
-        $quarto->save();
-
-        return response()->json([
-            "message" => "Quarto atualizado com sucesso!",
-            "data" => $quarto
-        ]);
-    }
-
-    public function verificarStatusQuarto(Request $request) 
-    {
-        $request->validate([
-            'idQuarto' => 'required', 
-        ]);
-
-        $idQuarto = $request->input('idQuarto');
-
-        $status = "ocupado";
-        if (QuartosHelpers::quartoDisponivel($idQuarto)) {
-            $status = "disponível";
-        }
-
-        return response()->json(['message' => "O quarto {$idQuarto} está {$status}"]);
     }
 }

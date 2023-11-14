@@ -13,7 +13,6 @@ class Reserva extends Model
         'idHotel', 
         'idHospede', 
         'idQuarto',
-        'idRegistro',
         'dtEntrada',
         'dtSaida',
         'vlReserva'

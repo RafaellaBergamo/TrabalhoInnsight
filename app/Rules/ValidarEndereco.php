@@ -25,7 +25,7 @@ class ValidarEndereco implements Rule
             }
         }
 
-        return !empty($rua) && !empty($numero) && !empty($rua);
+        return !empty($rua) && !empty($numero) && !empty($cep);
     }
 
     public function message()
