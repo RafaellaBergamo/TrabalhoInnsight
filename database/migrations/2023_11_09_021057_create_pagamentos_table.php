@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idHospede');
             $table->unsignedBigInteger('idReserva');
             $table->date("dtPagamento")->nullable();
-            $table->integer('formaPagamento');
+            $table->integer('formaPagamento')->nullable();
             $table->timestamps();
         });
 
