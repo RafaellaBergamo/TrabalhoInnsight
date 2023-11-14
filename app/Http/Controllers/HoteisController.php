@@ -15,6 +15,7 @@ use App\Rules\ValidarTelefone;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class HoteisController extends Controller
 {
@@ -28,8 +29,10 @@ class HoteisController extends Controller
     public function cadastrarHotel(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
-                'cnpj' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico, new IsFilial],
+                'cnpj' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'razaoSocial' => 'required|string',
                 'qtdQuartos' => 'required|integer',
                 'telefone' => ['required', new ValidarTelefone, new ApenasNumeros],
@@ -37,10 +40,14 @@ class HoteisController extends Controller
             ]);
 
             Hotel::create($request->all());
-    
+            
+            DB::commit();
             return response()->json(["message" => "Hotel cadastrado com sucesso!"], 201);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 422);
+        }  finally {
+            DB::closeConnection();
         }
     }
 
@@ -54,8 +61,11 @@ class HoteisController extends Controller
     public function atualizarHotel(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
-                'idHotel' => 'required', 
+                'idHotel' => 'required',
+                'razaoSocial' => 'string',
                 'cnpj' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico, new IsFilial],
                 'qtdQuartos' => 'integer',
                 'telefone' => [new ValidarTelefone, new ApenasNumeros],
@@ -68,6 +78,7 @@ class HoteisController extends Controller
 
             $hotel->update($request->all());
 
+            DB::commit();
             return response()->json([
                 "message" => "Hotel atualizado com sucesso!", 
                 "data" => $hotel
@@ -76,7 +87,10 @@ class HoteisController extends Controller
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
+        } finally {
+            DB::closeConnection();
         }
     }
 
