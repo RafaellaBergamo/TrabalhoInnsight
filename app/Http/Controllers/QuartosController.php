@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class QuartosController extends Controller
@@ -21,9 +22,11 @@ class QuartosController extends Controller
     public function cadastrarQuarto(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
                 'idHotel' => 'required|integer', 
-                'qtdCamas' => 'required|integer',
+                'qtdCamas' => 'required|integer|min:1',
                 'capacidade' => 'required|integer|min:1'
             ]);
             
@@ -33,13 +36,17 @@ class QuartosController extends Controller
 
             Quarto::create($request->all());
     
+            DB::commit();
             return response()->json(["message" => "Quarto cadastrado com sucesso!"]);
         } catch (ModelNotFoundException $ex) {
-            return response()->json(['errors' => 'Hotel não encontrado.'], 404);
+            return response()->json(['error' => 'Hotel não encontrado.'], 404);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 500);
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        } finally {
+            DB::closeConnection();
         }
     }
 
@@ -52,6 +59,8 @@ class QuartosController extends Controller
     public function atualizarQuarto(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
                 'idHotel' => 'required|integer',
                 'idQuarto' => 'required|integer',
@@ -65,16 +74,20 @@ class QuartosController extends Controller
     
             $quartoAtualizado = Quarto::atualizarDadosQuarto($idQuarto, $idHotel, $request->all());
     
+            DB::commit();
             return response()->json([
                 "message" => "Quarto atualizado com sucesso!",
                 "data" => $quartoAtualizado
             ]);
         } catch (ModelNotFoundException $ex) {
-            return response()->json(["errors" => "Quarto não encontrado."], 404);
+            return response()->json(["error" => "Quarto não encontrado."], 404);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 500);
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        } finally {
+            DB::closeConnection();
         }
     }
 
@@ -103,11 +116,17 @@ class QuartosController extends Controller
     
             return response()->json($quartos);
         } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function buscarQuartosComOStatus(string $statusQuarto) 
+    /**
+     * Retorna os quartos com o status enviado por parametro
+     * 
+     * @param string $statusQuarto
+     * @return JsonResponse
+     */
+    public function buscarQuartosComOStatus(string $statusQuarto): JsonResponse 
     {
         $estadosPermitidos = [
             'disponiveis' => Quarto::DISPONIVEL,
@@ -119,7 +138,7 @@ class QuartosController extends Controller
         if (!isset($estadosPermitidos[$statusQuarto])) {
             return response()->json(['error' => 'Status de quarto inválido.'], 400);
         }
-    
+
         // Realiza a consulta no banco de dados usando o status mapeado
         $quartos = Quarto::where('status', '=', $estadosPermitidos[$statusQuarto])->get();
     
