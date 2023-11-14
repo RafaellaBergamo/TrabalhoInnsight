@@ -22,7 +22,7 @@ Route::post('/hoteis', [HoteisController::class, 'cadastrarHotel']);
 Route::get('/hoteis', [HoteisController::class, 'buscarHoteis']);
 Route::get('/hoteis/{id}', [HoteisController::class, 'buscarHotelPorId']);
 Route::get("/hoteis/governanca", [HoteisController::class, 'buscarGovernancaDoHotel']);
-Route::put('/hoteis/{nomeHotel?}', [HoteisController::class, 'atualizarHotel']);
+Route::put('/hoteis', [HoteisController::class, 'atualizarHotel']);
 
 Route::post("/quartos", [QuartosController::class, 'cadastrarQuarto']);
 Route::get("/quartos", [QuartosController::class, 'buscarQuartos']);
