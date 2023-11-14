@@ -38,10 +38,10 @@ class HospedeController extends Controller
             DB::commit();
             return response()->json(["message" => "Hóspede cadastrado com sucesso!"], 201);
         } catch (ValidationException $e) {
-            DB::rollBack();
             return response()->json(['errors' => $e->errors()], 422);
-        } finally {
-            DB::closeConnection();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
 
@@ -78,11 +78,11 @@ class HospedeController extends Controller
 
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Hóspede não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
-        }  finally {
-            DB::closeConnection();
         }
     }
 
