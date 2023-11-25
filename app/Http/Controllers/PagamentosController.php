@@ -51,7 +51,7 @@ class PagamentosController extends Controller
             PagamentosHelper::enviarComprovantePorEmail($pagamento['id']);   
 
             DB::commit();
-            return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
+            return response()->json(["message" => "Pagamento efetuado com sucesso! Um email com os dados do pagamento foi enviado para o email cadastrado."], 201);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);

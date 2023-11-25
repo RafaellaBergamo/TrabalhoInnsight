@@ -1,18 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title> <h1>Confirmação de Reserva</h1> </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        h2 {
+            color: #3498db;
+        }
+
+        .info {
+            margin-top: 20px;
+        }
+
+        .info p {
+            margin-bottom: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <p> {{ $mensagem }} </p>
 
-    <p>Detalhes da Reserva:</p>
-    <ul>
-        <li>Data de Check-in: {{ $reserva->dtEntrada->format('d/m/Y') }}</li>
-        <li>Data de Check-out: {{ $reserva->dtSaida->format('d/m/Y') }}</li>
-        <li>Valor: R${{ number_format($reserva->vlReserva, 2, ',') }}</li>
-    </ul>
+    <div class="email-container">
+        <h2>Confirmação de Reserva</h2>
 
-    <p>Obrigado por escolher a Innsight!</p>
+        <div class="info">
+            <p><strong>Nome do Hóspede:</strong> {{ $nomeHospede }}</p>
+            <p><strong>Data de Check-in:</strong> {{ $reserva->dtEntrada->format('d/m/Y') }} </p>
+            <p><strong>Número da Reserva:</strong> {{ $reserva->dtSaida->format('d/m/Y') }} </p>
+            <p><strong>Valor:</strong> {{ number_format($reserva->vlReserva, '2', ',') }} </p>
+
+            <p>Estamos animados em tê-lo conosco!</p>
+        </div>
+    </div>
+
 </body>
 </html>
