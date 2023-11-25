@@ -6,6 +6,7 @@ use App\Http\Controllers\HoteisController;
 use App\Http\Controllers\QuartosController;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\HospedeController;
+use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\RegistrosHospedesController;
 
 /*
@@ -46,3 +47,7 @@ Route::put('/funcionarios', [FuncionariosController::class, 'atualizarFuncionari
 
 Route::post("/registros/checkin", [RegistrosHospedesController::class, 'registrarCheckin']);
 Route::post("/registros/checkout", [RegistrosHospedesController::class, 'registrarCheckout']);
+
+Route::post('/pagamentos', [PagamentosController::class, 'realizarPagamento']);
+Route::get('/pagamentos', [PagamentosController::class, 'buscarPagamentoPorHospede']);
+Route::get('/pagamentos/{idPagamento}', [PagamentosController::class, 'buscarPagamento']);
