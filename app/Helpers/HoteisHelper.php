@@ -47,7 +47,7 @@ class HoteisHelper
      * @param string $dtEntrada Y-m-d
      * @param string $dtSaida Y-m-d
      * 
-     * @return Hotel|null
+     * @return int|null
      */
     public static function buscarHotelDisponivel(string $dtEntrada, string $dtSaida)
     {
@@ -57,7 +57,7 @@ class HoteisHelper
             $idHotel = $hotel->id;
     
             if (!self::hotelEmCapacidadeMáxima($idHotel, $dtEntrada, $dtSaida)) {
-                return $hotel; 
+                return (int) $hotel->id; 
             }
         }
 

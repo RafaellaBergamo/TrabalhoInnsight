@@ -52,13 +52,13 @@ class ReservasController extends Controller
                 $dtEntrada->format('Y-m-d'),
                 $dtSaida->format('Y-m-d')
             )) {
-                $hotelDisponivel = HoteisHelper::buscarHotelDisponivel($dtEntrada->format('Y-m-d'), $dtSaida->format('Y-m-d'));
+                $idHotelDisponivel = HoteisHelper::buscarHotelDisponivel($dtEntrada->format('Y-m-d'), $dtSaida->format('Y-m-d'));
 
-                if (empty($hotelDisponivel)) {
+                if (empty($idHotelDisponivel)) {
                     throw new Exception("Nenhum hotel disponível para essa data.");
                 }
 
-                throw new Exception("O hotel escolhido não está disponível para essa data. Sugerimos reservar no hotel '{$hotelDisponivel->razaoSocial}'");
+                throw new Exception("O hotel escolhido não está disponível para essa data. Sugerimos reservar no hotel {$idHotelDisponivel}");
             };
 
             QuartosHelper::validarQuarto(
