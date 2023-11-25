@@ -8,6 +8,7 @@ use App\Models\RegistroHospede;
 use App\Models\Reserva;
 use App\Rules\ApenasNumeros;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -35,10 +36,6 @@ class RegistrosHospedesController extends Controller
 
             $idReserva = $request->input('idReserva');
 
-            $request->merge([
-                'dtCheckin' => Carbon::now()
-            ]);
-
             $reserva =  Reserva::where('id', '=', $idReserva)->first();
 
             if (empty($reserva)) {
@@ -48,6 +45,17 @@ class RegistrosHospedesController extends Controller
             if (!empty($registro['dtCheckin'])) {
                 throw new Exception("Checkin já realizado anteriormente.");
             }
+
+            $dataPermitida = (new DateTime($reserva['dtEntrada']))->format('d/m/Y');
+            $dataCheckin = Carbon::now()->format('d/m/Y');
+
+            if ($dataPermitida != $dataCheckin) {
+                throw new Exception("Você só pode realizar o checkin no dia {$dataPermitida}");
+            }
+
+            $request->merge([
+                'dtCheckin' => $dataCheckin
+            ]);
 
             RegistroHospede::create($request->all());
 
