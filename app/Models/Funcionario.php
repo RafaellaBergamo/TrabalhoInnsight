@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Pessoa;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
-class Funcionario extends Pessoa
+class Funcionario extends Pessoa implements CanResetPasswordContract
 {
-    use HasFactory;
+    use HasFactory, AuthenticatableTrait, CanResetPassword, Notifiable;
 
     const STATUS_ATIVO = 1;
     const STATUS_INATIVO = 0;
@@ -16,8 +20,12 @@ class Funcionario extends Pessoa
     const MASTER = 2;
 
     protected $fillable = [
-        'status',
+        'nome', 
+        'cpf',
+        'telefone',
+        'email',
         'tipo',
-        'idHotel'
+        'idHotel',
+        'senha'
     ];
 }
