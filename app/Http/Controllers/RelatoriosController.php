@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FuncionariosHelper;
 use App\Helpers\HospedesHelper;
+use App\Models\Funcionario;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,8 +23,17 @@ class RelatoriosController extends Controller
     {
         try {
             $request->validate([
-                'idHotel' => 'required|integer'
+                'idHotel' => 'required|integer',
+                'emailFuncionario' => 'required|email',
+                'senhaFuncionario' => 'required'
             ]);
+
+            $email = $request->input('emailFuncionario');
+            $senha = $request->input('senhaFuncionario');
+
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, Funcionario::MASTER)) {
+                throw new Exception("Funcionário sem acesso.");
+            }
 
             $idHotel = $request->input('idHotel');
             $hospedes = HospedesHelper::buscarHospedesDoHotel($idHotel);
