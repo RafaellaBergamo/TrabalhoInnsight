@@ -6,6 +6,7 @@ use App\Models\Funcionario;
 use App\Rules\ApenasNumeros;
 use App\Rules\CpfCnpjUnico;
 use App\Rules\ValidarCpfCnpj;
+use App\Rules\ValidarTelefone;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -27,6 +28,7 @@ class FuncionariosController extends Controller
                 'nome' => 'required|string',
                 'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'tipo' => 'integer',
+                'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email'
             ]);
 
@@ -54,6 +56,7 @@ class FuncionariosController extends Controller
                 'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'status' => 'integer',
                 'tipo' => 'integer',
+                'telefone' => new ValidarTelefone,
                 'email' => 'email'
             ]);
 
