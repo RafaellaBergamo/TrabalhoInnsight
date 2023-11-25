@@ -110,6 +110,14 @@ class RegistrosHospedesController extends Controller
             }
 
             $registro->update($request->all());
+
+            $reserva =  Reserva::where('id', '=', $idReserva)->first();
+
+            Quarto::atualizarDadosQuarto(
+                $reserva['idQuarto'],
+                $reserva['idHotel'], 
+                ['status' => Quarto::DISPONIVEL]
+            );
             
             DB::commit();
             return response()->json(["message" => "Checkout efetuado com sucesso!"], 201);
