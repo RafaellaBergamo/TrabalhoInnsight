@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HoteisHelper;
 use App\Helpers\QuartosHelper;
 use App\Helpers\ReservasHelper;
 use App\Models\Pagamento;
@@ -45,6 +46,20 @@ class ReservasController extends Controller
             $idHotel = $request->input('idHotel');
             $qtdHospedes = $request->input('qtdHospedes');
             $idHospede = $request->input('idHospede');
+
+            if (HoteisHelper::hotelEmCapacidadeMáxima(
+                $idHotel,
+                $dtEntrada->format('Y-m-d'),
+                $dtSaida->format('Y-m-d')
+            )) {
+                $hotelDisponivel = HoteisHelper::buscarHotelDisponivel($dtEntrada->format('Y-m-d'), $dtSaida->format('Y-m-d'));
+
+                if (empty($hotelDisponivel)) {
+                    throw new Exception("Nenhum hotel disponível para essa data.");
+                }
+
+                throw new Exception("O hotel escolhido não está disponível para essa data. Sugerimos reservar no hotel '{$hotelDisponivel->razaoSocial}'");
+            };
 
             QuartosHelper::validarQuarto(
                 $idQuarto, 

@@ -3,32 +3,64 @@
 namespace App\Helpers;
 
 use App\Models\Hotel;
+use App\Models\Reserva;
 use Exception;
 
 class HoteisHelper
 {
-    public static function hotelDisponivel(int $idHotel) 
-    {
-        Reserva::where("idHotel", "=", $idHotel)
-            -
-        return Quarto::find($idQuarto)['status'] === Quarto::DISPONIVEL;
+    /**
+     * Retorna se o hotel escolhido já está com a capacidade máxima ocupada
+     * 
+     * @param int $idHotel
+     * @param string $dtEntrada Y-m-d
+     * @param string $dtSaida Y-m-d
+     * 
+     * @return bool
+     */
+    public static function hotelEmCapacidadeMáxima(
+        int $idHotel, 
+        string $dtEntrada, 
+        string $dtSaida
+    ): bool {
+        $reservas = Reserva::query()->where('idHotel', '=', $idHotel)
+            ->where(
+            function ($query) use ($dtEntrada, $dtSaida) {
+                $query->whereBetween('dtEntrada', [$dtEntrada, $dtSaida])
+                    ->orWhereBetween('dtSaida', [$dtEntrada, $dtSaida])
+                    ->orWhere(
+                        function ($query) use ($dtEntrada, $dtSaida) {
+                            $query->where('dtEntrada', '<=', $dtEntrada)
+                            ->where('dtSaida', '>=', $dtSaida);
+                        }
+                    );
+            }       
+        )->get();
+
+        $capacidadeHotel = Hotel::find($idHotel)['qtdQuartos'];
+
+        return $capacidadeHotel == count($reservas);
     }
 
-    public static function buscarCapacidadeHotel(int $idHotel, int $idQuarto)
+    /**
+     * Busca o próximo hotel disponível para reservas
+     * 
+     * @param string $dtEntrada Y-m-d
+     * @param string $dtSaida Y-m-d
+     * 
+     * @return Hotel|null
+     */
+    public static function buscarHotelDisponivel(string $dtEntrada, string $dtSaida)
     {
-        return Quarto::buscarQuartos($idHotel, $idQuarto)->first()['capacidade'];
-    }
+        $hoteis = Hotel::all();
 
-    public static function validarQuarto(int $idQuarto, int $idHotel, int $qtdHospedes) 
-    {
-        if (!self::quartoDisponivel($idQuarto)) 
-        {
-            throw new Exception("Quarto indisponível.");
-        } 
-
-        $capacidadeMaxQuarto = self::buscarCapacidadeDoQuarto($idHotel, $idQuarto);
-        if ($qtdHospedes > $capacidadeMaxQuarto) {
-            throw new Exception("O quarto suporta apenas {$capacidadeMaxQuarto} hóspedes.");
+        foreach ($hoteis as $hotel) {
+            $idHotel = $hotel->id;
+    
+            if (!self::hotelEmCapacidadeMáxima($idHotel, $dtEntrada, $dtSaida)) {
+                return $hotel; 
+            }
         }
+
+        return null;
     }
 }
