@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('status')->default(Funcionario::STATUS_ATIVO);
             $table->integer('tipo')->default(Funcionario::COMUM);
             $table->string('email');
+            $table->string('senha');
             $table->unsignedBigInteger('idHotel');
             $table->timestamps();
         });
