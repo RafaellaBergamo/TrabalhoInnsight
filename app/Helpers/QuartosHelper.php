@@ -15,7 +15,8 @@ class QuartosHelper
      */
     public static function quartoDisponivel(int $idQuarto): bool 
     {
-        return Quarto::find($idQuarto)['status'] === Quarto::DISPONIVEL;
+        $quarto = Quarto::find($idQuarto);
+        return !empty($quarto) && $quarto['status'] === Quarto::DISPONIVEL;
     }
 
     /**
@@ -42,8 +43,7 @@ class QuartosHelper
      */
     public static function validarQuarto(int $idQuarto, int $idHotel, int $qtdHospedes)
     {
-        if (!self::quartoDisponivel($idQuarto)) 
-        {
+        if (!self::quartoDisponivel($idQuarto)) {
             throw new Exception("Quarto indisponível.");
         } 
 
