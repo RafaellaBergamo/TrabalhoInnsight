@@ -38,8 +38,8 @@ class ReservasController extends Controller
                 'vlReserva' => 'required|numeric'
             ]);
 
-            $dtEntrada = Carbon::createFromFormat('d/m/Y', $request->input('dtEntrada'))->timezone('America/Sao_Paulo');
-            $dtSaida =  Carbon::createFromFormat('d/m/Y', $request->input('dtSaida'))->timezone('America/Sao_Paulo');
+            $dtEntrada = Carbon::createFromFormat('d/m/Y', $request->input('dtEntrada'), 'America/Sao_Paulo');
+            $dtSaida =  Carbon::createFromFormat('d/m/Y', $request->input('dtSaida'), 'America/Sao_Paulo');
 
             $idQuarto = $request->input('idQuarto');
             $idHotel = $request->input('idHotel');

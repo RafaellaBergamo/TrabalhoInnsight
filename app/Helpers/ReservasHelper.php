@@ -21,8 +21,7 @@ class ReservasHelper
      */
     public static function validarCamposDeData(Carbon $dtEntrada, Carbon $dtSaida)
     {
-
-        if (!$dtEntrada->gte(Carbon::today())) {
+        if (!$dtEntrada->gte(Carbon::now()->setTimezone('America/Sao_Paulo')->toDateString())) {
             throw new Exception("Data de entrada deve ser maior ou igual à data atual.");
         }
 
