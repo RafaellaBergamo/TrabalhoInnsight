@@ -42,7 +42,11 @@ class RegistrosHospedesController extends Controller
             $reserva =  Reserva::where('id', '=', $idReserva)->first();
 
             if (empty($reserva)) {
-                throw new Exception("Reserva não encontrada.");
+                throw new Exception("Reserva não encontrada. Verifique se a o id da reserva está correto.");
+            }
+
+            if (!empty($registro['dtCheckin'])) {
+                throw new Exception("Checkin já realizado anteriormente.");
             }
 
             RegistroHospede::create($request->all());
@@ -90,11 +94,15 @@ class RegistrosHospedesController extends Controller
             $registro = RegistroHospede::query()->where('idReserva', '=', $idReserva)->first();
 
             if (empty($registro)) {
-                throw new Exception("Verifique se a o id da reserva está correto.");
+                throw new Exception("Reserva não encontrada. Verifique se a o id da reserva está correto.");
+            }
+
+            if (!empty($registro['dtCheckout'])) {
+                throw new Exception("Checkout já realizado anteriormente.");
             }
 
             if (empty($registro['dtCheckin'])) {
-                throw new Exception("Você deve fazer o checkin antes de fazer checkout.");
+                throw new Exception("Você deve realizar o checkin antes de fazer checkout.");
             }
 
             if (Pagamento::pagamentoPendente($idReserva)) {

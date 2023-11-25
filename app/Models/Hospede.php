@@ -3,17 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Pessoa;
 
-class Hospede extends Model
+class Hospede extends Pessoa
 {
     use HasFactory;
-
-    protected $fillable = [
-        'nome', 
-        'cpf',
-        'telefone',
-        'email'
-    ];
-
 }

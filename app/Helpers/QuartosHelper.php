@@ -13,9 +13,16 @@ class QuartosHelper
      * @param int $idQuarto
      * @return bool
      */
-    public static function quartoDisponivel(int $idQuarto): bool 
-    {
-        return Quarto::find($idQuarto)['status'] === Quarto::DISPONIVEL;
+    public static function quartoDisponivel(
+        int $idQuarto,
+        string $dtEntrada,
+        string $dtSaida
+    ): bool {
+        $quarto = Quarto::find($idQuarto);
+        return !empty($quarto) && (
+            $quarto['status'] === Quarto::DISPONIVEL
+            || !ReservasHelper::existeReservaParaEssaData($idQuarto, $dtEntrada, $dtSaida)
+        );
     }
 
     /**
@@ -25,7 +32,7 @@ class QuartosHelper
      * @param int $idQuarto
      * @return int
      */
-    public static function buscarCapacidadeDoQuarto(int $idHotel, int $idQuarto):int
+    public static function buscarCapacidadeDoQuarto(int $idHotel, int $idQuarto): int
     {
         return Quarto::buscarQuartos($idHotel, $idQuarto)->first()['capacidade'];
     }
@@ -36,15 +43,21 @@ class QuartosHelper
      * @param int $idQuarto
      * @param int $idHotel
      * @param int $qtdHospedes
+     * @param string $dtEntrada
+     * @param string $dtSaida
      * 
      * @return void
      * @throws Exception
      */
-    public static function validarQuarto(int $idQuarto, int $idHotel, int $qtdHospedes)
-    {
-        if (!self::quartoDisponivel($idQuarto)) 
-        {
-            throw new Exception("Quarto indisponível.");
+    public static function validarQuarto(
+        int $idQuarto, 
+        int $idHotel, 
+        int $qtdHospedes,
+        string $dtEntrada,
+        string $dtSaida
+    ) {
+        if (!self::quartoDisponivel($idQuarto, $dtEntrada, $dtSaida)) {
+            throw new Exception("Quarto indisponível para essa data.");
         } 
 
         $capacidadeMaxQuarto = self::buscarCapacidadeDoQuarto($idHotel, $idQuarto);

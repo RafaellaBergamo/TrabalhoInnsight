@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('cpf');
+            $table->string('telefone');
             $table->boolean('status')->default(Funcionario::STATUS_ATIVO);
             $table->integer('tipo')->default(Funcionario::COMUM);
             $table->string('email');

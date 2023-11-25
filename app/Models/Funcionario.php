@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Pessoa;
 
-class Funcionario extends Model
+class Funcionario extends Pessoa
 {
     use HasFactory;
 
@@ -16,11 +16,8 @@ class Funcionario extends Model
     const MASTER = 2;
 
     protected $fillable = [
-        'nome', 
-        'cpf', 
         'status',
         'tipo',
-        'idHotel',
-        'email'
+        'idHotel'
     ];
 }

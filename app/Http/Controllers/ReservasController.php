@@ -38,15 +38,22 @@ class ReservasController extends Controller
                 'vlReserva' => 'required|numeric'
             ]);
 
-            $dtEntrada = Carbon::createFromFormat('d/m/Y', $request->input('dtEntrada'))->timezone('America/Sao_Paulo');
-            $dtSaida =  Carbon::createFromFormat('d/m/Y', $request->input('dtSaida'))->timezone('America/Sao_Paulo');
+            $dtEntrada = Carbon::createFromFormat('d/m/Y', $request->input('dtEntrada'), 'America/Sao_Paulo');
+            $dtSaida =  Carbon::createFromFormat('d/m/Y', $request->input('dtSaida'), 'America/Sao_Paulo');
 
             $idQuarto = $request->input('idQuarto');
             $idHotel = $request->input('idHotel');
             $qtdHospedes = $request->input('qtdHospedes');
             $idHospede = $request->input('idHospede');
 
-            QuartosHelper::validarQuarto($idQuarto, $idHotel, $qtdHospedes);
+            QuartosHelper::validarQuarto(
+                $idQuarto, 
+                $idHotel, 
+                $qtdHospedes,
+                $dtEntrada->format('Y-m-d'),
+                $dtSaida->format('Y-m-d')
+            );
+
             ReservasHelper::validarCamposDeData($dtEntrada, $dtSaida);
 
             $request->merge([
