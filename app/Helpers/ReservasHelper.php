@@ -44,4 +44,34 @@ class ReservasHelper
 
         Mail::to($hospede['email'])->send(new ConfirmacaoReserva($hospede['nome'], $reserva));
     }
+
+    /**
+     * Verifica se já existe uma reserva entre a data desejada
+     * 
+     * @param int $idQuarto
+     * @param string $dtEntrada - no formado Y-m-d
+     * @param string $dtSaida - no formato Y-m-d
+     * 
+     * @return bool
+     */
+    public static function existeReservaParaEssaData(
+        int $idQuarto, 
+        string $dtEntrada, 
+        string $dtSaida
+    ): bool {
+        return Reserva::query()->where('idQuarto', '=', $idQuarto)
+            ->where(
+                function ($query) use ($dtEntrada, $dtSaida) {
+                    $query->whereBetween('dtEntrada', [$dtEntrada, $dtSaida])
+                        ->orWhereBetween('dtSaida', [$dtEntrada, $dtSaida])
+                        ->orWhere(
+                            function ($query) use ($dtEntrada, $dtSaida) {
+                                $query->where('dtEntrada', '<=', $dtEntrada)
+                                ->where('dtSaida', '>=', $dtSaida);
+                            }
+                        );
+                }       
+            )
+            ->exists();
+    }
 }

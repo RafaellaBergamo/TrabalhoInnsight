@@ -46,7 +46,14 @@ class ReservasController extends Controller
             $qtdHospedes = $request->input('qtdHospedes');
             $idHospede = $request->input('idHospede');
 
-            QuartosHelper::validarQuarto($idQuarto, $idHotel, $qtdHospedes);
+            QuartosHelper::validarQuarto(
+                $idQuarto, 
+                $idHotel, 
+                $qtdHospedes,
+                $dtEntrada->format('Y-m-d'),
+                $dtSaida->format('Y-m-d')
+            );
+
             ReservasHelper::validarCamposDeData($dtEntrada, $dtSaida);
 
             $request->merge([
