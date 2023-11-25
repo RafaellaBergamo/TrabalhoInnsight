@@ -8,6 +8,7 @@ use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\HospedeController;
 use App\Http\Controllers\PagamentosController;
 use App\Http\Controllers\RegistrosHospedesController;
+use App\Http\Controllers\RelatoriosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,5 @@ Route::post("/registros/checkout", [RegistrosHospedesController::class, 'registr
 Route::post('/pagamentos', [PagamentosController::class, 'realizarPagamento']);
 Route::get('/pagamentos', [PagamentosController::class, 'buscarPagamentoPorHospede']);
 Route::get('/pagamentos/{idPagamento}', [PagamentosController::class, 'buscarPagamento']);
+
+Route::get('/relatorios', [RelatoriosController::class, 'gerarRelatorioHospedesDoHotel']);
