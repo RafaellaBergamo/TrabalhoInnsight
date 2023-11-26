@@ -1,5 +1,102 @@
 API desenvolvida para a disciplina de Implementação de Sistemas de Informação da UNESP - Bauru
 
+# Cadastrar Funcionário
+
+Cadastra um novo funcionário na plataforma.
+
+## Endpoint
+
+`POST http://localhost:8000/api/funcionarios`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `nome` (obrigatório, tipo: string): Nome do funcionário.
+- `cpf` (obrigatório, tipo: string): CPF do funcionário (apenas números).
+- `tipo` (opcional, tipo: integer): Tipo de funcionário (0 - COMUM, 1 - GOVERNANCA, 2 - MASTER).
+- `telefone` (obrigatório, tipo: string): Número de telefone do funcionário (apenas números, com DDD).
+- `email` (obrigatório, tipo: string): Email do funcionário.
+- `senha` (obrigatório, tipo: string): Senha do funcionário (mínimo de 6 caracteres)
+
+Exemplo de Requisição:
+
+```json
+{
+  "nome": "Nome do Funcionário",
+  "cpf": "12345678901",
+  "tipo": 1,
+  "telefone": "11987654321",
+  "email": "funcionario@example.com",
+  "senha": "senha123"
+}
+```
+# Atualizar Funcionário
+
+Atualiza informações de um funcionário existente na plataforma.
+
+## Endpoint
+
+`PUT http://localhost:8000/api/funcionarios`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `id` (obrigatório, tipo: integer): ID do funcionário que será atualizado.
+- `nome` (opcional, tipo: string): Novo nome do funcionário.
+- `cpf` (opcional, tipo: string): Novo CPF do funcionário (apenas números).
+- `tipo` (opcional, tipo: integer): Novo tipo de funcionário (0 - COMUM, 1 - GOVERNANCA, 2 - MASTER).
+- `telefone` (opcional, tipo: string): Novo número de telefone do funcionário (apenas números, com DDD).
+- `email` (opcional, tipo: string): Novo email do funcionário.
+- `senha` (opcional, tipo: string): Nova senha do funcionário (mínimo de 6 caracteres).
+
+Exemplo de Requisição:
+
+```json
+{
+  "id": 1,
+  "nome": "Novo Nome do Funcionário",
+  "cpf": "98765432109",
+  "tipo": 2,
+  "telefone": "11998765432",
+  "email": "novoemail@example.com",
+  "senha": "novasenha123"
+}
+```
+
+# Buscar Funcionário por ID
+
+Recupera informações sobre um funcionário específico na plataforma.
+
+## Endpoint
+
+`GET http://localhost:8000/api/funcionarios/{id}`
+
+## Parâmetros de Requisição
+
+- `id` (obrigatório, tipo: integer): ID do funcionário para busca específica.
+
+## Exemplo de Requisição
+
+`GET http://localhost:8000/api/funcionarios/1`
+
+## Resposta de Sucesso
+
+Status: 200 OK
+
+```json
+{
+  "idFuncionario": 1,
+  "nome": "Nome do Funcionário",
+  "cpf": "12345678901",
+  "tipo": 1,
+  "telefone": "11987654321",
+  "email": "funcionario@example.com",
+  "idHotel": 1
+}
+```
+
 ## Cadastrar Hotéis
 
 Cadastra um novo hotel na plataforma.
@@ -88,4 +185,3 @@ Exemplo de Requisição:
   "idHotel": 1
 }
 ```
-
