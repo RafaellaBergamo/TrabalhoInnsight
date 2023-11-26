@@ -52,7 +52,6 @@ Route::prefix('/reservas')->group(function () {
 Route::prefix('/funcionarios')->group(function () {
     Route::post("/", [FuncionariosController::class, 'cadastrarFuncionario']);
     Route::get("/{id}", [FuncionariosController::class, 'buscarFuncionarioPorId']);
-    Route::get("/hotel", [FuncionariosController::class, 'buscarFuncionarioDoHotel']);
     Route::put('/', [FuncionariosController::class, 'atualizarFuncionario']);
 });
 

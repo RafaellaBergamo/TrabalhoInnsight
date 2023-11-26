@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FuncionariosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
 use App\Rules\ApenasNumeros;
@@ -36,8 +35,7 @@ class FuncionariosController extends Controller
                 'tipo' => 'integer',
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
-                'senha' => 'required|min:6',
-                'idHotel' => 'required'
+                'senha' => 'required|min:6'
             ]);
 
             $request->merge([
@@ -75,7 +73,6 @@ class FuncionariosController extends Controller
 
             $request->validate([
                 'idFuncionario' => 'required',
-                'idHotel' => 'integer',
                 'nome' => 'string', 
                 'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'status' => 'integer',
@@ -132,28 +129,6 @@ class FuncionariosController extends Controller
             return response()->json($idFuncionario);
         } catch (ModelNotFoundException $e) {
             return response()->json(['errors' => "Funcionário não encontrada"], 500);
-        } catch (Exception $e) {
-            return response()->json(['errors' => $e->getMessage()], 500);
-        }
-    }
-
-    /**
-     * Busca funcionários de um hotel
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function buscarFuncionariosDoHotel(int $idHotel): JsonResponse
-    {
-        try {
-            $funcionarios = Funcionario::where("idHotel", "=", $idHotel)->get();
-    
-            if (empty(count($funcionarios))) {
-                return response()->json(['errors' => "Esse hotel não possui funcionários."], 500);
-            }
-
-            return response()->json($funcionarios);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
