@@ -40,8 +40,6 @@ class RelatoriosController extends Controller
 
             $relatorio = FacadePdf::loadView('relatorios.relatorioHospedes', ["hospedes" => $hospedes]);
 
-            $nomeArquivo = "relatorioHospedes.pdf";
-
             return response($relatorio->output(), 200)
                 ->header('Content-Type', 'application/pdf');
         } catch (ModelNotFoundException $ex) {
