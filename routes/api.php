@@ -51,11 +51,11 @@ Route::post("/registros/checkin", [RegistrosHospedesController::class, 'registra
 Route::post("/registros/checkout", [RegistrosHospedesController::class, 'registrarCheckout']);
 
 Route::post('/pagamentos', [PagamentosController::class, 'realizarPagamento']);
-Route::get('/pagamentos', [PagamentosController::class, 'buscarPagamentoPorHospede']);
-Route::get('/pagamentos/{idPagamento}', [PagamentosController::class, 'buscarPagamento']);
+Route::get('/pagamentos', [PagamentosController::class, 'buscarDadosPagamento']);
 
 Route::post('/produtos', [ProdutosController::class, 'cadastrarProduto']);
 Route::get('/produtos', [ProdutosController::class, 'buscarProdutos']);
-Route::put('/produtos', [ProdutosController::class, 'atualizarProdutos']);
+Route::put('/produtos', [ProdutosController::class, 'atualizarProduto']);
 
-Route::get('/relatorios', [RelatoriosController::class, 'gerarRelatorioHospedesDoHotel']);
+Route::get('/relatorios/hospedes', [RelatoriosController::class, 'gerarRelatorioHospedesDoHotel']);
+Route::get('/relatorios/produtos', [RelatoriosController::class, 'gerarRelatorioProdutos']);
