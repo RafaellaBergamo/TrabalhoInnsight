@@ -37,17 +37,8 @@ class FuncionariosController extends Controller
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
                 'senha' => 'required|min:6',
-                'idHotel' => 'required',
-                'emailFuncionario' => 'required|email',
-                'senhaFuncionario' => 'required'
+                'idHotel' => 'required'
             ]);
-
-            $email = $request->input('emailFuncionario');
-            $senha = $request->input('senhaFuncionario');
-
-            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
-                throw new Exception("Funcionário sem acesso.");
-            }
 
             $request->merge([
                 'senha' => Hash::make($request->input('senha'))
@@ -90,17 +81,8 @@ class FuncionariosController extends Controller
                 'status' => 'integer',
                 'tipo' => 'integer',
                 'telefone' => new ValidarTelefone,
-                'email' => 'email',
-                'emailFuncionario' => 'required|email',
-                'senhaFuncionario' => 'required'
+                'email' => 'email'
             ]);
-
-            $email = $request->input('emailFuncionario');
-            $senha = $request->input('senhaFuncionario');
-
-            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
-                throw new Exception("Funcionário sem acesso.");
-            }
 
             $idFuncionario = $request->input('idFuncionario');
 
