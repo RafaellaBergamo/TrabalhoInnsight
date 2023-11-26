@@ -66,4 +66,39 @@ class PagamentosHelper
     {
         return self::$formaPagamento[$formaPagamentoString];
     }
+
+    /**
+     * Retorna os dados do pagamento conforme o filtro enviado
+     * 
+     * @param int|null $idPagamento
+     * @param int|null $idHospede
+     * @param int|null $idReserva
+     */
+    public static function buscarDadosPagamento(
+        int $idPagamento = null, 
+        int $idHospede = null, 
+        int $idReserva = null,
+        int $formaPagamento = null,
+        bool $apenasLiquidados = false
+    ) {
+        $dadosPagamento = Pagamento::query()
+            ->when(!empty($idPagamento), function ($query) use ($idPagamento) {
+                $query->where('id', '=', $idPagamento);
+            })
+            ->when(!empty($idHospede), function ($query) use ($idHospede) {
+                $query->where('idHospede', '=', $idHospede);
+            })
+            ->when(!empty($idReserva), function ($query) use ($idReserva) {
+                $query->where('idReserva', '=', $idReserva);
+            })
+            ->when(!empty($formaPagamento), function ($query) use ($formaPagamento) {
+                $query->where('formaPagamento', '=', $formaPagamento);
+            })
+            ->when(!empty($apenasLiquidados), function ($query) {
+                $query->whereNotNull('dtPagamento');
+            })
+            ->get();
+
+        return $dadosPagamento;
+    }
 }
