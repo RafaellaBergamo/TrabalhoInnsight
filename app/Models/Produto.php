@@ -13,6 +13,6 @@ class Produto extends Model
     protected $fillable = [
         'descricao', 
         'qtdProduto',
-        'tipo'
+        'idHotel'
     ];
 }
