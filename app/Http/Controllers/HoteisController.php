@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FuncionariosHelper;
+use App\Models\Funcionario;
 use Illuminate\Http\Request;
 
 use App\Models\Hotel;
@@ -37,8 +38,17 @@ class HoteisController extends Controller
                 'razaoSocial' => 'required|string',
                 'qtdQuartos' => 'required|integer',
                 'telefone' => ['required', new ValidarTelefone, new ApenasNumeros],
-                'endereco' => ['required', new ValidarEndereco]
+                'endereco' => ['required', new ValidarEndereco],
+                'emailFuncionario' => 'required|email',
+                'senhaFuncionario' => 'required'
             ]);
+
+            $email = $request->input('emailFuncionario');
+            $senha = $request->input('senhaFuncionario');
+
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
+                throw new Exception("Funcionário sem acesso.");
+            }
 
             Hotel::create($request->all());
             
@@ -70,8 +80,17 @@ class HoteisController extends Controller
                 'cnpj' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico, new IsFilial],
                 'qtdQuartos' => 'integer',
                 'telefone' => [new ValidarTelefone, new ApenasNumeros],
-                'endereco' => new ValidarEndereco
+                'endereco' => new ValidarEndereco,
+                'emailFuncionario' => 'required|email',
+                'senhaFuncionario' => 'required'
             ]);
+
+            $email = $request->input('emailFuncionario');
+            $senha = $request->input('senhaFuncionario');
+
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
+                throw new Exception("Funcionário sem acesso.");
+            }
 
             $idHotel = $request->input('idHotel');
 
