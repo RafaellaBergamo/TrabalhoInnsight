@@ -142,7 +142,7 @@ class FuncionariosController extends Controller
      * @return JsonResponse
      * @throws ModelNotFoundException|Exception
      */
-    public function buscarFuncionario(int $idFuncionario): JsonResponse
+    public function buscarFuncionarioPorId(int $idFuncionario): JsonResponse
     {
         try {
             $idFuncionario = Funcionario::findOrFail($idFuncionario);
