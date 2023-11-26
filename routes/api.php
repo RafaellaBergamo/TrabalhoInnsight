@@ -7,6 +7,7 @@ use App\Http\Controllers\QuartosController;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\HospedeController;
 use App\Http\Controllers\PagamentosController;
+use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\RegistrosHospedesController;
 use App\Http\Controllers\RelatoriosController;
 
@@ -52,5 +53,9 @@ Route::post("/registros/checkout", [RegistrosHospedesController::class, 'registr
 Route::post('/pagamentos', [PagamentosController::class, 'realizarPagamento']);
 Route::get('/pagamentos', [PagamentosController::class, 'buscarPagamentoPorHospede']);
 Route::get('/pagamentos/{idPagamento}', [PagamentosController::class, 'buscarPagamento']);
+
+Route::post('/produtos', [ProdutosController::class, 'cadastrarProduto']);
+Route::get('/produtos', [ProdutosController::class, 'buscarProdutos']);
+Route::put('/produtos', [ProdutosController::class, 'atualizarProdutos']);
 
 Route::get('/relatorios', [RelatoriosController::class, 'gerarRelatorioHospedesDoHotel']);
