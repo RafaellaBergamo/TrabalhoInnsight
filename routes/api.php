@@ -42,9 +42,12 @@ Route::prefix('/hospedes')->group(function () {
     Route::put('/', [HospedeController::class, 'atualizarHospede']);
 });
 
-Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);
-Route::get("/reservas/{id}", [ReservasController::class, 'buscarReserva']);
-Route::put('/reservas', [ReservasController::class, 'atualizarReserva']);
+Route::prefix('/reservas')->group(function () {
+    Route::post("/", [ReservasController::class, 'cadastrarReserva']);
+    Route::get("/", [ReservasController::class, 'buscarReservaPorHospede']);
+    Route::get("/{id}", [ReservasController::class, 'buscarReserva']);
+    Route::put('/', [ReservasController::class, 'atualizarReserva']);
+});
 
 Route::post("/funcionarios", [FuncionariosController::class, 'cadastrarFuncionario']);
 Route::get("/funcionarios/{id}", [FuncionariosController::class, 'buscarFuncionario']);

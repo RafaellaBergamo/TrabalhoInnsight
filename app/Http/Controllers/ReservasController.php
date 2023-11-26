@@ -158,4 +158,28 @@ class ReservasController extends Controller
         }
     }
 
+    /**
+     * Busca as reservas de um hóspede
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
+     */
+    public function buscarReservasDoHospede(Request $request) 
+    {
+        try {
+            $request->validate([
+                'idHospede' => 'required|integer'
+            ]);
+
+            $idHospede = $request->input('idHospede');
+            $reserva = Reserva::where('idHospede', '=', $idHospede);
+    
+            return response()->json($reserva);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
 }
