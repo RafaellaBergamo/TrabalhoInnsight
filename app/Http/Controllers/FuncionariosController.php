@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FuncionariosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
 use App\Rules\ApenasNumeros;
@@ -13,10 +14,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session as FacadesSession;
 
 class FuncionariosController extends Controller
 {
@@ -38,8 +37,17 @@ class FuncionariosController extends Controller
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
                 'senha' => 'required|min:6',
-                'idHotel' => 'required'
+                'idHotel' => 'required',
+                'emailFuncionario' => 'required|email',
+                'senhaFuncionario' => 'required'
             ]);
+
+            $email = $request->input('emailFuncionario');
+            $senha = $request->input('senhaFuncionario');
+
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
+                throw new Exception("Funcionário sem acesso.");
+            }
 
             $request->merge([
                 'senha' => Hash::make($request->input('senha'))
@@ -82,8 +90,17 @@ class FuncionariosController extends Controller
                 'status' => 'integer',
                 'tipo' => 'integer',
                 'telefone' => new ValidarTelefone,
-                'email' => 'email'
+                'email' => 'email',
+                'emailFuncionario' => 'required|email',
+                'senhaFuncionario' => 'required'
             ]);
+
+            $email = $request->input('emailFuncionario');
+            $senha = $request->input('senhaFuncionario');
+
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
+                throw new Exception("Funcionário sem acesso.");
+            }
 
             $idFuncionario = $request->input('idFuncionario');
 
@@ -110,39 +127,6 @@ class FuncionariosController extends Controller
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Funcionário não encontrado.'], 404);
-        } catch (ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 422);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json(['errors' => $e->getMessage()], 500);
-        }
-    }
-
-    public function atualizarSenha(Request $request): JsonResponse
-    {
-        try {
-            DB::beginTransaction();
-            $request->validate([
-                'senha' => 'required|min:6',
-                'novaSenha' => 'required|min:6|confirmed',
-            ]);
-    
-            $funcionario = Auth::user();
-    
-            // Verificar a senha atual
-            if (!Hash::check($request->input('password'), $funcionario->senha)) {
-                return response()->json(['errors' => 'Senha atual incorreta.'], 500);
-            }
-    
-            $funcionario = Funcionario::findOrFail(FacadesSession::get('idFuncionario'));
-    
-            $request->merge([
-                'senha' => Hash::make($request->input('novaSenha'))
-            ]);
-    
-            $funcionario->update($request->all());
-
-            DB::commit();
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
