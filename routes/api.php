@@ -39,7 +39,7 @@ Route::prefix('/hospedes')->group(function () {
     Route::post('/', [HospedeController::class, 'cadastrarHospede']);
     Route::get('/', [HospedeController::class, 'buscarHospedePorNome']);
     Route::get('/{id}', [HospedeController::class, 'buscarHospedePorId']);
-    Route::put('/hospedes', [HospedeController::class, 'atualizarHospede']);
+    Route::put('/', [HospedeController::class, 'atualizarHospede']);
 });
 
 Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);
