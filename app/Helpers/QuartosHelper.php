@@ -65,4 +65,27 @@ class QuartosHelper
             throw new Exception("O quarto suporta apenas {$capacidadeMaxQuarto} hóspedes.");
         }
     }
+
+    /**
+     * Retorna os quartos de um hotel que estão com o status enviado
+     * 
+     * @param int $idHotel
+     * @param string $status
+     */
+    public static function buscarQuartosDoHotelPorStatus(int $idHotel, string $status)
+    {
+        $estadosPermitidos = [
+            'disponiveis' => Quarto::DISPONIVEL,
+            'ocupados' => Quarto::OCUPADO,
+            'sujos' => Quarto::SUJO,
+        ];
+
+        if (!isset($estadosPermitidos[$status])) {
+            throw new Exception('Status de quarto inválido.');
+        }
+        
+        return Quarto::query()->where('idHotel', '=', $idHotel)
+            ->where('status', '=', $estadosPermitidos[$status])
+            ->get();
+    }
 }

@@ -28,11 +28,12 @@ Route::prefix('/hoteis')->group(function () {
     Route::put('/', [HoteisController::class, 'atualizarHotel']);
 });
 
-
-Route::post("/quartos", [QuartosController::class, 'cadastrarQuarto']);
-Route::get("/quartos", [QuartosController::class, 'buscarQuartos']);
-Route::get("/quartos/status", [QuartosController::class, 'buscarQuartosComOStatus']);
-Route::put('/quartos', [QuartosController::class, 'atualizarQuarto']);
+Route::prefix('/quartos')->group(function () {
+    Route::post("/", [QuartosController::class, 'cadastrarQuarto']);
+    Route::get("/", [QuartosController::class, 'buscarQuartos']);
+    Route::get("/status", [QuartosController::class, 'buscarQuartosComOStatus']);
+    Route::put('/', [QuartosController::class, 'atualizarQuarto']);
+});
 
 Route::post('/hospedes', [HospedeController::class, 'cadastrarHospede']);
 Route::get('/hospedes', [HospedeController::class, 'buscarHospedePorNome']);
