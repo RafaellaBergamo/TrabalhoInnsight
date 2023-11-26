@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FuncionariosHelper;
 use App\Helpers\HospedesHelper;
+use App\Helpers\PagamentosHelper;
 use App\Helpers\ProdutosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
@@ -84,6 +85,56 @@ class RelatoriosController extends Controller
             $produtos = ProdutosHelper::buscarProdutos($idProduto, $idHotel, (string) $descricao);
 
             $relatorio = FacadePdf::loadView('relatorios.relatorioProdutos', ["produtos" => $produtos]);
+
+            return response($relatorio->output(), 200)
+                ->header('Content-Type', 'application/pdf');
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function gerarRelatorioPagamento(Request $request)
+    {
+        try {
+            $request->validate([
+                'emailFuncionario' => 'required|email',
+                'senhaFuncionario' => 'required',
+                'idPagamento' => 'integer',
+                'idHospede' => 'integer',
+                'idReserva' => 'integer',
+                'formaPagamento' => 'string',
+                'apenasLiquidados' => 'bool'
+            ]);
+
+            $email = $request->input('emailFuncionario');
+            $senha = $request->input('senhaFuncionario');
+
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
+                throw new Exception("Funcionário sem acesso.");
+            }
+
+            $idPagamento = $request->input('idPagamento');
+            $idHospede = $request->input('idHospede');
+            $idReserva = $request->input('idReserva');
+            $apenasLiquidadas = $request->input('apenasLiquidados');
+
+            $formaPagamento = $request->input('formaPagamento');
+
+            if (
+                !empty($formaPagamento) 
+                && !Pagamento::formaPagamentoValida($formaPagamento)
+            ) {
+                throw new Exception("As formas de pagamento permitidas são: BOLETO, CARTAO_CREDITO, CARTAO_DEBITO ou DINHEIRO");
+            }
+
+            $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento($formaPagamento);
+
+            $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva, $formaPagamentoInt, $apenasLiquidadas);
+
+            $relatorio = FacadePdf::loadView('relatorios.relatorioPagamentos', ["pagamentos" => $pagamentos]);
 
             return response($relatorio->output(), 200)
                 ->header('Content-Type', 'application/pdf');
