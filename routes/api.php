@@ -22,11 +22,12 @@ use App\Http\Controllers\RelatoriosController;
 |
 */
 
-Route::post('/hoteis', [HoteisController::class, 'cadastrarHotel']);
-Route::get('/hoteis', [HoteisController::class, 'buscarHoteis']);
-Route::get('/hoteis/{id}', [HoteisController::class, 'buscarHotelPorId']);
-Route::get("/hoteis/governanca", [HoteisController::class, 'buscarGovernancaDoHotel']);
-Route::put('/hoteis', [HoteisController::class, 'atualizarHotel']);
+Route::prefix('/hoteis')->group(function () {
+    Route::post('/', [HoteisController::class, 'cadastrarHotel']);
+    Route::get('/', [HoteisController::class, 'buscarHoteis']);
+    Route::put('/', [HoteisController::class, 'atualizarHotel']);
+});
+
 
 Route::post("/quartos", [QuartosController::class, 'cadastrarQuarto']);
 Route::get("/quartos", [QuartosController::class, 'buscarQuartos']);

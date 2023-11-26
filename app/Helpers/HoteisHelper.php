@@ -63,4 +63,24 @@ class HoteisHelper
 
         return null;
     }
+
+        /**
+     * Retorna os dados do pagamento conforme o filtro enviado
+     * 
+     * @param int|null $idHotel
+     * @param string $razaoSocial
+     */
+    public static function buscarHoteis(
+        int $idHotel = null, 
+        string $razaoSocial = ''
+    ) {
+        return Hotel::query()
+            ->when(!empty($idHotel), function ($query) use ($idHotel) {
+                $query->where('id', '=', $idHotel);
+            })
+            ->when(!empty($razaoSocial), function ($query) use ($razaoSocial) {
+                $query->where('razaoSocial', 'LIKE', "%{$razaoSocial}%");
+            })
+            ->get();
+    }
 }
