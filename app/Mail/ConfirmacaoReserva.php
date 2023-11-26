@@ -23,7 +23,7 @@ class ConfirmacaoReserva extends Mailable
     {
         return $this->view('emails.confirmacao_reserva')
         ->with([
-            "mensagem" => "Olá, {$this->nomeHospede}! Sua reserva foi confirmada com sucesso.",
+            "nomeHospede" => $this->nomeHospede,
             "reserva" => $this->reserva
         ]);
     }

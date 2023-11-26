@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class PagamentosController extends Controller
 {
@@ -51,7 +52,41 @@ class PagamentosController extends Controller
             PagamentosHelper::enviarComprovantePorEmail($pagamento['id']);   
 
             DB::commit();
-            return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
+            return response()->json(["message" => "Pagamento efetuado com sucesso! Um email com os dados do pagamento foi enviado para o email cadastrado."], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Retorna os dados de pagamento
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function buscarDadosPagamento(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            
+            $request->validate([
+                'idPagamento' => 'integer',
+                'idHospede' => 'integer',
+                'idReserva' => 'integer'
+            ]);
+
+            $idPagamento = $request->input('idPagamento');
+            $idHospede = $request->input('idHospede');
+            $idReserva = $request->input('idReserva');
+
+            $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva);
+
+            return response()->json(["data" => $pagamentos], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\QuartosHelper;
 use App\Models\Quarto;
 use App\Models\Hotel;
 use Exception;
@@ -100,7 +101,8 @@ class QuartosController extends Controller
         try {
             $request->validate([
                 'idHotel' => 'required|integer', 
-                'idQuarto' => 'integer|nullable'
+                'idQuarto' => 'integer',
+                'status' => 'string'
             ]);
     
             $idHotel = $request->input('idHotel');
@@ -113,6 +115,8 @@ class QuartosController extends Controller
             }
     
             return response()->json($quartos);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -132,23 +136,10 @@ class QuartosController extends Controller
                 'status' => 'string|required'
             ]);
 
-            $estadosPermitidos = [
-                'disponiveis' => Quarto::DISPONIVEL,
-                'ocupados' => Quarto::OCUPADO,
-                'sujos' => Quarto::SUJO,
-            ];
-
             $statusQuarto = $request->input('status');
             $idHotel = $request->input('idHotel');
 
-            // Verifica se o status fornecido é válido
-            if (!isset($estadosPermitidos[$statusQuarto])) {
-                return response()->json(['error' => 'Status de quarto inválido.'], 400);
-            }
-
-            $quartos = Quarto::query()->where('idHotel', '=', $idHotel)
-                ->where('status', '=', $estadosPermitidos[$statusQuarto])
-                ->get();
+            $quartos = QuartosHelper::buscarQuartosDoHotelPorStatus($idHotel, $statusQuarto);
 
             return response()->json($quartos);
         } catch (ValidationException $e) {

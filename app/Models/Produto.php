@@ -9,10 +9,11 @@ class Produto extends Model
 {
     use HasFactory;
 
-    
+    const QUANTIDADE_MINIMA = 5;
+
     protected $fillable = [
         'descricao', 
         'qtdProduto',
-        'tipo'
+        'idHotel'
     ];
 }

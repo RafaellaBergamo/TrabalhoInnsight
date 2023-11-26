@@ -7,7 +7,9 @@ use App\Http\Controllers\QuartosController;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\HospedeController;
 use App\Http\Controllers\PagamentosController;
+use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\RegistrosHospedesController;
+use App\Http\Controllers\RelatoriosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,34 +22,57 @@ use App\Http\Controllers\RegistrosHospedesController;
 |
 */
 
-Route::post('/hoteis', [HoteisController::class, 'cadastrarHotel']);
-Route::get('/hoteis', [HoteisController::class, 'buscarHoteis']);
-Route::get('/hoteis/{id}', [HoteisController::class, 'buscarHotelPorId']);
-Route::get("/hoteis/governanca", [HoteisController::class, 'buscarGovernancaDoHotel']);
-Route::put('/hoteis', [HoteisController::class, 'atualizarHotel']);
+Route::prefix('/hoteis')->group(function () {
+    Route::post('/', [HoteisController::class, 'cadastrarHotel']);
+    Route::get('/', [HoteisController::class, 'buscarHoteis']);
+    Route::put('/', [HoteisController::class, 'atualizarHotel']);
+});
 
-Route::post("/quartos", [QuartosController::class, 'cadastrarQuarto']);
-Route::get("/quartos", [QuartosController::class, 'buscarQuartos']);
-Route::get("/quartos/status", [QuartosController::class, 'buscarQuartosComOStatus']);
-Route::put('/quartos', [QuartosController::class, 'atualizarQuarto']);
+Route::prefix('/quartos')->group(function () {
+    Route::post("/", [QuartosController::class, 'cadastrarQuarto']);
+    Route::get("/", [QuartosController::class, 'buscarQuartos']);
+    Route::get("/status", [QuartosController::class, 'buscarQuartosComOStatus']);
+    Route::put('/', [QuartosController::class, 'atualizarQuarto']);
+});
 
-Route::post('/hospedes', [HospedeController::class, 'cadastrarHospede']);
-Route::get('/hospedes', [HospedeController::class, 'buscarHospedePorNome']);
-Route::get('/hospedes/{id}', [HospedeController::class, 'buscarHospedePorId']);
-Route::put('/hospedes', [HospedeController::class, 'atualizarHospede']);
+Route::prefix('/hospedes')->group(function () {
+    Route::post('/', [HospedeController::class, 'cadastrarHospede']);
+    Route::get('/', [HospedeController::class, 'buscarHospedePorNome']);
+    Route::get('/{id}', [HospedeController::class, 'buscarHospedePorId']);
+    Route::put('/', [HospedeController::class, 'atualizarHospede']);
+});
 
-Route::post("/reservas", [ReservasController::class, 'cadastrarReserva']);
-Route::get("/reservas/{id}", [ReservasController::class, 'buscarReserva']);
-Route::put('/reservas', [ReservasController::class, 'atualizarReserva']);
+Route::prefix('/reservas')->group(function () {
+    Route::post("/", [ReservasController::class, 'cadastrarReserva']);
+    Route::get("/", [ReservasController::class, 'buscarReservaPorHospede']);
+    Route::get("/{id}", [ReservasController::class, 'buscarReserva']);
+    Route::put('/', [ReservasController::class, 'atualizarReserva']);
+});
 
-Route::post("/funcionarios", [FuncionariosController::class, 'cadastrarFuncionario']);
-Route::get("/funcionarios/{id}", [FuncionariosController::class, 'buscarFuncionario']);
-Route::get("/funcionarios/hotel", [FuncionariosController::class, 'buscarFuncionarioDoHotel']);
-Route::put('/funcionarios', [FuncionariosController::class, 'atualizarFuncionario']);
+Route::prefix('/funcionarios')->group(function () {
+    Route::post("/", [FuncionariosController::class, 'cadastrarFuncionario']);
+    Route::get("/{id}", [FuncionariosController::class, 'buscarFuncionarioPorId']);
+    Route::get("/hotel", [FuncionariosController::class, 'buscarFuncionarioDoHotel']);
+    Route::put('/', [FuncionariosController::class, 'atualizarFuncionario']);
+});
 
-Route::post("/registros/checkin", [RegistrosHospedesController::class, 'registrarCheckin']);
-Route::post("/registros/checkout", [RegistrosHospedesController::class, 'registrarCheckout']);
+Route::prefix('/produtos')->group(function () {
+    Route::post('/', [ProdutosController::class, 'cadastrarProduto']);
+    Route::get('/', [ProdutosController::class, 'buscarProdutos']);
+    Route::put('/', [ProdutosController::class, 'atualizarProduto']);
+});
 
-Route::post('/pagamentos', [PagamentosController::class, 'realizarPagamento']);
-Route::get('/pagamentos', [PagamentosController::class, 'buscarPagamentoPorHospede']);
-Route::get('/pagamentos/{idPagamento}', [PagamentosController::class, 'buscarPagamento']);
+Route::prefix('/registros')->group(function () {
+    Route::post("/checkin", [RegistrosHospedesController::class, 'registrarCheckin']);
+    Route::post("/checkout", [RegistrosHospedesController::class, 'registrarCheckout']);
+});
+
+Route::prefix('/pagamentos')->group(function () {
+    Route::post('/', [PagamentosController::class, 'realizarPagamento']);
+    Route::get('/', [PagamentosController::class, 'buscarDadosPagamento']);
+});
+
+Route::prefix('/relatorios')->group(function () {
+    Route::get('/hospedes', [RelatoriosController::class, 'gerarRelatorioHospedesDoHotel']);
+    Route::get('/produtos', [RelatoriosController::class, 'gerarRelatorioProdutos']);
+});

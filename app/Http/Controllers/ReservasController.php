@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HoteisHelper;
 use App\Helpers\QuartosHelper;
 use App\Helpers\ReservasHelper;
 use App\Models\Pagamento;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ReservasController extends Controller
 {
@@ -46,6 +48,20 @@ class ReservasController extends Controller
             $qtdHospedes = $request->input('qtdHospedes');
             $idHospede = $request->input('idHospede');
 
+            if (HoteisHelper::hotelEmCapacidadeMáxima(
+                $idHotel,
+                $dtEntrada->format('Y-m-d'),
+                $dtSaida->format('Y-m-d')
+            )) {
+                $idHotelDisponivel = HoteisHelper::buscarHotelDisponivel($dtEntrada->format('Y-m-d'), $dtSaida->format('Y-m-d'));
+
+                if (empty($idHotelDisponivel)) {
+                    throw new Exception("Nenhum hotel disponível para essa data.");
+                }
+
+                throw new Exception("O hotel escolhido não está disponível para essa data. Sugerimos reservar no hotel {$idHotelDisponivel}");
+            };
+
             QuartosHelper::validarQuarto(
                 $idQuarto, 
                 $idHotel, 
@@ -68,6 +84,8 @@ class ReservasController extends Controller
 
             DB::commit();
             return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
@@ -112,11 +130,11 @@ class ReservasController extends Controller
 
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Reserva não encontrada.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
-        } finally {
-            DB::closeConnection();
         }
     }
 
@@ -140,4 +158,28 @@ class ReservasController extends Controller
         }
     }
 
+    /**
+     * Busca as reservas de um hóspede
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ModelNotFoundException|Exception
+     */
+    public function buscarReservasDoHospede(Request $request) 
+    {
+        try {
+            $request->validate([
+                'idHospede' => 'required|integer'
+            ]);
+
+            $idHospede = $request->input('idHospede');
+            $reserva = Reserva::where('idHospede', '=', $idHospede);
+    
+            return response()->json($reserva);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
 }
