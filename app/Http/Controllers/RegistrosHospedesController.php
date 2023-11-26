@@ -124,7 +124,7 @@ class RegistrosHospedesController extends Controller
             Quarto::atualizarDadosQuarto(
                 $reserva['idQuarto'],
                 $reserva['idHotel'], 
-                ['status' => Quarto::DISPONIVEL]
+                ['status' => Quarto::SUJO]
             );
             
             DB::commit();
