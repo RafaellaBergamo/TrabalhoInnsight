@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FuncionariosHelper;
+use App\Helpers\ProdutosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
 use App\Models\Produto;
@@ -31,7 +32,7 @@ class ProdutosController extends Controller
                 'senhaFuncionario' => 'required|string',
                 'idHotel' => 'required|integer',
                 'descricao' => 'required|string',
-                'quantidade' => 'required|integer|min:0'
+                'qtdProduto' => 'required|integer|min:5'
             ]);
 
             $email = $request->input('emailFuncionario');
@@ -66,7 +67,7 @@ class ProdutosController extends Controller
      * @return JsonResponse
      * @throws ModelNotFoundException|Exception
      */
-    public function atualizarEstoque(Request $request): JsonResponse
+    public function atualizarProduto(Request $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -75,8 +76,8 @@ class ProdutosController extends Controller
                 'emailFuncionario' => 'required|email',
                 'senhaFuncionario' => 'required|string',
                 'idProduto' => 'required|integer',
-                'descricao' => 'required|string',
-                'quantidade' => 'required|integer|min:0'
+                'descricao' => 'string',
+                'qtdProduto' => 'integer|min:0'
             ]);
 
             $email = $request->input('emailFuncionario');
@@ -91,6 +92,10 @@ class ProdutosController extends Controller
             $produto = Produto::findOrFail($idProduto);
 
             $produto->update($request->all());
+
+            if ($produto->qtdProduto < Produto::QUANTIDADE_MINIMA) {
+                ProdutosHelper::notificarEstoqueBaixo($produto);
+            }
 
             DB::commit();
 
@@ -139,19 +144,7 @@ class ProdutosController extends Controller
             $idProduto = $request->input('idProduto');
             $descricao = $request->input('descricao');
 
-            $queryBuscarProduto = Produto::query()
-                ->when(!empty($idProduto), function ($query) use ($idProduto) {
-                    $query->where('id', '=', $idProduto);
-                })
-                ->when(!empty($idHotel), function ($query) use ($idHotel) {
-                    $query->where('idHotel', '=', $idHotel);
-                })
-                ->when(!empty($descricao), function ($query) use ($descricao) {
-                    $query->where('descricao', 'LIKE', "%{$descricao}%");
-                });
-
-            $produtos = $queryBuscarProduto->get();
-
+            $produtos = ProdutosHelper::buscarProdutos($idProduto, $idHotel, (string) $descricao);
 
             return response()->json(["data" => $produtos]);
         } catch (ValidationException $e) {
