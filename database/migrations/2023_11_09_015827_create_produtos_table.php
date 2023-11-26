@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('descricao');
             $table->integer('qtdProduto')->default(0);
-            $table->integer('tipo');
+            $table->unsignedBigInteger('idHotel');
             $table->timestamps();
+        });
+
+        Schema::table('produtos', function (Blueprint $table) {
+            $table->foreign('idHotel')->references('id')->on('hotels')->onDelete('cascade');
         });
     }
 
