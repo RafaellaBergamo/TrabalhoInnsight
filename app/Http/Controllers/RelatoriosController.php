@@ -31,7 +31,7 @@ class RelatoriosController extends Controller
             $email = $request->input('emailFuncionario');
             $senha = $request->input('senhaFuncionario');
 
-            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, Funcionario::MASTER)) {
+            if (!FuncionariosHelper::funcionarioComAcesso($email, $senha, [Funcionario::MASTER])) {
                 throw new Exception("Funcionário sem acesso.");
             }
 
