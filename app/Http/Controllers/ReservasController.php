@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ReservasController extends Controller
 {
@@ -83,6 +84,8 @@ class ReservasController extends Controller
 
             DB::commit();
             return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
@@ -127,11 +130,11 @@ class ReservasController extends Controller
 
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Reserva não encontrada.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
-        } finally {
-            DB::closeConnection();
         }
     }
 

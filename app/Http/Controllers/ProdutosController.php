@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ProdutosController extends Controller
 {
@@ -50,6 +51,8 @@ class ProdutosController extends Controller
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
@@ -99,6 +102,8 @@ class ProdutosController extends Controller
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Produto não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
@@ -149,6 +154,8 @@ class ProdutosController extends Controller
 
 
             return response()->json(["data" => $produtos]);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }

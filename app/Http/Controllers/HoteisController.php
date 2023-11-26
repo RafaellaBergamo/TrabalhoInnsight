@@ -87,6 +87,8 @@ class HoteisController extends Controller
 
         } catch (ModelNotFoundException $ex) {
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);

@@ -113,6 +113,8 @@ class QuartosController extends Controller
             }
     
             return response()->json($quartos);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

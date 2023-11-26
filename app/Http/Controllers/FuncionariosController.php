@@ -8,6 +8,7 @@ use App\Rules\ApenasNumeros;
 use App\Rules\CpfCnpjUnico;
 use App\Rules\ValidarCpfCnpj;
 use App\Rules\ValidarTelefone;
+use Illuminate\Validation\ValidationException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -53,6 +54,8 @@ class FuncionariosController extends Controller
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
@@ -107,6 +110,8 @@ class FuncionariosController extends Controller
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Funcionário não encontrado.'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
@@ -138,6 +143,8 @@ class FuncionariosController extends Controller
             $funcionario->update($request->all());
 
             DB::commit();
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);

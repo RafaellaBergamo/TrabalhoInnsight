@@ -129,6 +129,8 @@ class RegistrosHospedesController extends Controller
             
             DB::commit();
             return response()->json(["message" => "Checkout efetuado com sucesso!"], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 422);

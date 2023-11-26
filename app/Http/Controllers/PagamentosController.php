@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class PagamentosController extends Controller
 {
@@ -52,6 +53,8 @@ class PagamentosController extends Controller
 
             DB::commit();
             return response()->json(["message" => "Pagamento efetuado com sucesso! Um email com os dados do pagamento foi enviado para o email cadastrado."], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['errors' => $e->getMessage()], 500);
