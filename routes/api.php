@@ -22,7 +22,7 @@ use App\Http\Controllers\RelatoriosController;
 |
 */
 Route::prefix('/funcionarios')->group(function () {
-    Route::post("/", [FuncionariosController::class, 'cadastrarFuncionario']);
+    Route::post("/teste", [FuncionariosController::class, 'cadastrarFuncionario']);
     Route::get("/{id}", [FuncionariosController::class, 'buscarFuncionarioPorId']);
     Route::put('/', [FuncionariosController::class, 'atualizarFuncionario']);
 });
