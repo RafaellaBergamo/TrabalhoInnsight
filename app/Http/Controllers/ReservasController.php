@@ -83,6 +83,8 @@ class ReservasController extends Controller
             ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
             DB::commit();
+
+            dd(Reserva::find(1));
             return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
