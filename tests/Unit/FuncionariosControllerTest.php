@@ -195,7 +195,6 @@ class FuncionariosControllerTest extends TestCase
             'error' => [
                 'telefone' => [
                     'O telefone/celular deve conter o formato de 10 (telefone) ou 11 (celular) dígitos',
-                    'O campo deve conter apenas números.'
                 ]
             ]
         ]); 

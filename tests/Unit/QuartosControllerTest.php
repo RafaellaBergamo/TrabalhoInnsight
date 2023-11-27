@@ -14,7 +14,6 @@ class QuartosControllerTest extends TestCase
     /** @test */
     public function cadastra_quarto_hotel_nao_existe()
     {
-        // funcionário existe na base mas não é um usuário Master
         $data = [
             'idHotel' => 1, 
             'qtdCamas' => 2,
@@ -24,7 +23,7 @@ class QuartosControllerTest extends TestCase
         // Chamada ao endpoint ou rota do Controller para criar um quarto
         $response = $this->post('/api/quartos', $data);
 
-        // Verifique erro na crianção do quarto (status HTTP 422 - Bad Request)
+        // Verifique erro na crianção do quarto (status HTTP 404 - Recurso não foi encontrado)
         $response->assertStatus(404);
 
         // Verifica se a mensagem de erro é a esperada
@@ -48,6 +47,8 @@ class QuartosControllerTest extends TestCase
 
         // Chamada ao endpoint ou rota do Controller para criar um funcionário
         $response = $this->post('/api/funcionarios', $dados);
+        
+        $response->assertStatus(201);
 
         $data = [
             'emailFuncionario' => 'funcio@example.com',
@@ -74,7 +75,7 @@ class QuartosControllerTest extends TestCase
         // Chamada ao endpoint ou rota do Controller para criar um quarto
         $response = $this->post('/api/quartos', $datavalue);
 
-        // Verifique erro na crianção do quarto (status HTTP 201 - Created)
+        // Verifique erro na crianção do quarto (status HTTP 200 - OK)
         $response->assertStatus(200);
 
         // Verifica se a mensagem é a esperada

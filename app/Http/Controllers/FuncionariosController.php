@@ -34,7 +34,7 @@ class FuncionariosController extends Controller
                 'nome' => 'required|string',
                 'cpf' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'tipo' => 'integer',
-                'telefone' => ['required', new ValidarTelefone, new ApenasNumeros],
+                'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
                 'senha' => 'required|min:6'
             ]);

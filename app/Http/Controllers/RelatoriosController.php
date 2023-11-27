@@ -8,6 +8,7 @@ use App\Helpers\PagamentosHelper;
 use App\Helpers\ProdutosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
+use App\Models\Pagamento;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
