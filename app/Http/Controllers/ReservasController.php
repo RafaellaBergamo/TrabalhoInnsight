@@ -77,9 +77,8 @@ class ReservasController extends Controller
                 'dtSaida' => Carbon::createFromFormat('Y-m-d H:i:s', $dtSaida)
             ]);
 
-            dd($request->all());
             $reserva = Reserva::create($request->all());
-
+            dd($reserva);
             Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
             //ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
