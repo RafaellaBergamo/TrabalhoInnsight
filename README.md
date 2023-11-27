@@ -361,3 +361,98 @@ Status: 200 OK
   "email": "hospede@example.com"
 }
 ```
+# Cadastrar Funcionário
+
+Cadastra um novo funcionário na plataforma.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/funcionarios`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `nome` (obrigatório, tipo: string): Nome do funcionário.
+- `cpf` (obrigatório, tipo: string): CPF do funcionário (apenas números).
+- `tipo` (opcional, tipo: integer): Tipo de funcionário (0 - COMUM, 1 - GOVERNANCA, 2 - MASTER).
+- `telefone` (obrigatório, tipo: string): Número de telefone do funcionário (apenas números, com DDD).
+- `email` (obrigatório, tipo: string): Email do funcionário.
+- `senha` (obrigatório, tipo: string): Senha do funcionário (mínimo de 6 caracteres)
+
+Exemplo de Requisição:
+
+```json
+{
+  "nome": "Nome do Funcionário",
+  "cpf": "12345678901",
+  "tipo": 1,
+  "telefone": "11987654321",
+  "email": "funcionario@example.com",
+  "senha": "senha123"
+}
+```
+
+## Cadastrar Reserva
+
+Endpoint para cadastrar uma nova reserva.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/reservas`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHotel` (obrigatório, tipo: integer): Id do hotel onde vai ser a reserva.
+- `idHospede` (obrigatório, tipo: integer): id do Hóspede.
+- `idQuarto` (obrigatório, tipo: integer): Id do hóspede da reserva.
+- `qtdHospedes` (obrigatório, tipo: integer): Quantidade de pessoas na reserva.
+- `dtEntrada` (obrigatório, tipo: date): Data de entrada da reserva (d/m/Y).
+- `dtSaida` (obrigatório, tipo: date): Data de saída da reserva (d/m/Y).
+- `vlReserva` (obrigatório, tipo: float): Valor total da reserva
+
+Exemplo de Requisição:
+  ```json
+  {
+      "idHotel": 1,
+      "idHospede": Exemplo Hóspede,
+      "idQuarto": 1,
+      "qtdHospedes": 2,
+      "dtEntrada": 27/11/2023,
+      "dtSaida":  30/11/2023,
+      "vlReserva": 750
+  }
+  ```
+## Buscar Reserva
+
+Endpoint para buscar uma reserva específica pelo ID.
+
+- **URL**
+  ```
+  GET https://innsight-e19951768fbc.herokuapp.com/api/reservas/{id}
+  ```
+
+## Atualizar Reserva
+
+Endpoint para atualizar uma reserva existente.
+
+- **URL**
+  ```
+  PUT https://innsight-e19951768fbc.herokuapp.com/api/reservas
+  ```
+
+- **Corpo da Requisição**
+  ```json
+  {
+      "idReserva": [obrigatório, integer],
+      "idHotel": [opcional, integer],
+      "idHospede": [opcional, integer],
+      "idQuarto": [opcional, integer],
+      "qtdHospedes": [opcional, integer],
+      "dtEntrada": [opcional, date, formato: d/m/Y],
+      "dtSaida":  [opcional, date, formato: d/m/Y],
+      "vlReserva": [opcional, float]
+  }
+  ```
