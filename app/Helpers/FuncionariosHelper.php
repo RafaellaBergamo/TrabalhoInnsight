@@ -33,4 +33,17 @@ class FuncionariosHelper
 
         return !empty($funcionario) && Hash::check($senha, $funcionario->senha) && in_array($funcionario->tipo, $acessos);
     }
+
+    /**
+     * Retorna se o tipo da funcionário é válido
+     * 
+     * @param int $tipo
+     * @return bool
+     */
+    public static function tipoFuncionarioValido(int $tipo): bool
+    {
+        $tiposValidos = [Funcionario::COMUM, Funcionario::GOVERNANCA, Funcionario::MASTER];
+
+        return in_array($tipo, $tiposValidos);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FuncionariosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
 use App\Rules\ApenasNumeros;
@@ -32,7 +33,7 @@ class FuncionariosController extends Controller
             $request->validate([
                 'nome' => 'required|string',
                 'cpf' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
-                'tipo' => 'integer|in:0,1,2',
+                'tipo' => 'integer',
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
                 'senha' => 'required|min:6'
@@ -41,6 +42,15 @@ class FuncionariosController extends Controller
             $request->merge([
                 'senha' => Hash::make($request->input('senha'))
             ]);
+
+            $tipo = $request->input('tipo');
+
+            if (
+                !empty($tipo)
+                && !FuncionariosHelper::tipoFuncionarioValido((int) $tipo)
+            ) {
+                throw new Exception("O tipo do funcionário tem que estar entre: 0 - Comum, 1 - Governança, 2 - Master");
+            }
 
             Funcionario::create($request->all());
 
