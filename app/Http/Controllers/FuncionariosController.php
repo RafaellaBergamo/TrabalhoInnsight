@@ -31,7 +31,7 @@ class FuncionariosController extends Controller
             DB::beginTransaction();
             $request->validate([
                 'nome' => 'required|string',
-                'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
+                'cpf' => ['required|numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'tipo' => 'integer',
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
