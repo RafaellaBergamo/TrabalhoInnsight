@@ -49,7 +49,6 @@ class RegistrosHospedesController extends Controller
             $dataPermitida = (new DateTime($reserva['dtEntrada']))->format('d/m/Y');
             $dataCheckin = Carbon::now()->format('d/m/Y');
 
-            dd("até aqui ok");
             if ($dataPermitida != $dataCheckin) {
                 throw new Exception("Você só pode realizar o checkin no dia {$dataPermitida}");
             }
@@ -58,6 +57,7 @@ class RegistrosHospedesController extends Controller
                 'dtCheckin' => Carbon::createFromFormat('Y-m-d H:i:s', $dataCheckin)
             ]);
 
+            dd($request->all());
             RegistroHospede::create($request->all());
 
             Quarto::atualizarDadosQuarto(
