@@ -6,7 +6,7 @@ Cadastra um novo funcionário na plataforma.
 
 ## Endpoint
 
-`POST http://localhost:8000/api/funcionarios`
+`POST https://innsight-e19951768fbc.herokuapp.com/api/funcionarios`
 
 ## Parâmetros de Requisição
 
@@ -37,13 +37,12 @@ Atualiza informações de um funcionário existente na plataforma.
 
 ## Endpoint
 
-`PUT http://localhost:8000/api/funcionarios`
+`PUT https://innsight-e19951768fbc.herokuapp.com/api/funcionarios/{id}`
 
 ## Parâmetros de Requisição
 
 Enviar como payload JSON:
 
-- `id` (obrigatório, tipo: integer): ID do funcionário que será atualizado.
 - `nome` (opcional, tipo: string): Novo nome do funcionário.
 - `cpf` (opcional, tipo: string): Novo CPF do funcionário (apenas números).
 - `tipo` (opcional, tipo: integer): Novo tipo de funcionário (0 - COMUM, 1 - GOVERNANCA, 2 - MASTER).
@@ -55,7 +54,6 @@ Exemplo de Requisição:
 
 ```json
 {
-  "id": 1,
   "nome": "Novo Nome do Funcionário",
   "cpf": "98765432109",
   "tipo": 2,
