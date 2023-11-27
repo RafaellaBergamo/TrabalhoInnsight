@@ -74,7 +74,7 @@ class FuncionariosController extends Controller
                 'nome' => 'string', 
                 'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'status' => 'integer',
-                'tipo' => 'integer|min:0|max:2',
+                'tipo' => 'integer|in:0,1,2',
                 'telefone' => new ValidarTelefone,
                 'email' => 'email'
             ]);
