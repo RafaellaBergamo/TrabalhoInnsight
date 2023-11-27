@@ -72,7 +72,6 @@ class ReservasController extends Controller
 
             ReservasHelper::validarCamposDeData($dtEntrada, $dtSaida);
 
-            dd("até aqui ok");
             $request->merge([
                 'dtEntrada' => Carbon::createFromFormat('Y-m-d H:i:s', $dtEntrada),
                 'dtSaida' => Carbon::createFromFormat('Y-m-d H:i:s', $dtSaida)
@@ -81,6 +80,8 @@ class ReservasController extends Controller
             $reserva = Reserva::create($request->all());
 
             Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
+            
+            dd("até aqui ok 2");
             ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
             DB::commit();
