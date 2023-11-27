@@ -69,7 +69,7 @@ Recupera informações sobre um funcionário específico na plataforma.
 
 ## Endpoint
 
-`GET http://localhost:8000/api/funcionarios/{id}`
+`GET https://innsight-e19951768fbc.herokuapp.com/api/funcionarios`
 
 ## Parâmetros de Requisição
 
