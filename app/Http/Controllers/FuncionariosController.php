@@ -31,8 +31,8 @@ class FuncionariosController extends Controller
             DB::beginTransaction();
             $request->validate([
                 'nome' => 'required|string',
-                'cpf' => ['required|numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
-                'tipo' => 'integer|min:0|max:2',
+                'cpf' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
+                'tipo' => 'integer|in:0,1,2',
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
                 'senha' => 'required|min:6'
@@ -72,7 +72,7 @@ class FuncionariosController extends Controller
 
             $request->validate([
                 'nome' => 'string', 
-                'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
+                'cpf' => [new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'status' => 'integer',
                 'tipo' => 'integer|in:0,1,2',
                 'telefone' => new ValidarTelefone,
