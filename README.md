@@ -183,3 +183,74 @@ Exemplo de Requisição:
   "idHotel": 1
 }
 ```
+
+# Cadastrar Quarto
+
+Cadastra um quarto pra um hotel
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/quartos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHotel` (obrigatório, tipo: integer): id do hotel.
+- `qtdCamas` (obrigatório, tipo: integer): Quantas camas tem o quarto.
+- `capacidade` (obrigatório, tipo: integer): Quantos hóspedes o quarto comporta.
+
+Exemplo de Requisição:
+
+```json
+{
+    "idHotel": 1,
+    "qtdCamas": 2,
+    "capacidade": 4
+}
+```
+# Buscar Quarto
+
+Recupera informações sobre um quarto específico na plataforma.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/quartos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHotel` (obrigatório, tipo: integer): ID do hotel ao qual quero buscar os quartos.
+- `idQuarto` (opcional, tipo: integer): ID do quarto para busca específica.
+
+Exemplo de Requisição:
+
+```json
+{
+  "idHotel": 1
+}
+```
+
+# Buscar Quartos por Status
+
+Recupera informações sobre quartos com um status específico em um hotel na plataforma.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/quartos/status`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHotel` (obrigatório, tipo: integer): ID do hotel para busca específica.
+- `status` (obrigatório, tipo: string): Status do quarto ("disponível", "sujo", "ocupado").
+
+Exemplo de Requisição:
+
+```json
+{
+  "idHotel": 1,
+  "status": "disponível"
+}
