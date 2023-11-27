@@ -557,30 +557,46 @@ Exemplo de Requisição:
   "qtdProduto": 20
 }
 ```
-# Cadastrar Hóspede
 
-Cadastra um novo hóspede na plataforma.
+# Fazer Check-in
+
+Registra o check-in de um hóspede no hotel.
 
 ## Endpoint
 
-`POST https://innsight-e19951768fbc.herokuapp.com/api/hospedes`
+`POST https://innsight-e19951768fbc.herokuapp.com/api/registros/checkin`
 
 ## Parâmetros de Requisição
 
 Enviar como payload JSON:
 
-- `nome` (obrigatório, tipo: string): Nome do hóspede.
-- `cpf` (obrigatório, tipo: string): CPF do hóspede (apenas números).
-- `telefone` (obrigatório, tipo: string): Número de telefone do hóspede (apenas números, com DDD).
-- `email` (obrigatório, tipo: string): Email do hóspede.
+- `idReserva` (obrigatório, tipo: integer): ID da reserva associada ao check-in.
 
 **Exemplo de Requisição:**
 ```json
 {
-  "nome": "Nome do Hóspede",
-  "cpf": "12345678901",
-  "telefone": "11987654321",
-  "email": "hospede@example.com"
+  "idReserva": 123
+}
+```
+
+# Fazer Check-out
+
+Registra o check-out de um hóspede do hotel.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/registros/checkout`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idReserva` (obrigatório, tipo: integer): ID da reserva associada ao check-out.
+
+**Exemplo de Requisição:**
+```json
+{
+  "idReserva": 123
 }
 ```
 
