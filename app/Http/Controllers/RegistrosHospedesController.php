@@ -48,6 +48,7 @@ class RegistrosHospedesController extends Controller
 
             $dataCheckin = Carbon::now('America/Sao_Paulo');
             try {
+                dd($reserva['dtEntrada'], $reserva);
                 $dataPermitida = Carbon::createFromFormat('d/m/Y', $reserva['dtEntrada'], 'America/Sao_Paulo');
     
             } catch (Exception $e) {
