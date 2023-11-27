@@ -12,9 +12,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if ($this->app->environment('heroku')) {
-            URL::forceScheme('https');
-        }
     }
 
     /**
@@ -22,8 +19,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (env('APP_ENV') === 'production') {
-            URL::forceScheme('https');
-        }
     }
 }
