@@ -33,6 +33,7 @@ class HospedeController extends Controller
                 'email' => 'required|email'
             ]);
 
+            dd($request->all());
             Hospede::create($request->all());
             
             DB::commit();
