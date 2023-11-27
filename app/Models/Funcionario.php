@@ -25,7 +25,6 @@ class Funcionario extends Pessoa implements CanResetPasswordContract
         'telefone',
         'email',
         'tipo',
-        'idHotel',
         'senha'
     ];
 }

@@ -22,12 +22,7 @@ return new class extends Migration
             $table->integer('tipo')->default(Funcionario::COMUM);
             $table->string('email');
             $table->string('senha');
-            $table->unsignedBigInteger('idHotel');
             $table->timestamps();
-        });
-
-        Schema::table('funcionarios', function (Blueprint $table) {
-            $table->foreign('idHotel')->references('id')->on('hotels')->onDelete('cascade');
         });
     }
 
