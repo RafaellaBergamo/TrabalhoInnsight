@@ -135,11 +135,11 @@ class HoteisController extends Controller
 
             $hoteis = HoteisHelper::buscarHoteis($idHotel, (string) $razaoSocial);
 
-            dd($hoteis);
             if (empty(count($$hoteis))) {
                 return response()->json(['message' => 'Nenhum hotel encontrado.'], 404);
             }
     
+            dd("teste");
             return response()->json($hoteis);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
