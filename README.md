@@ -254,3 +254,110 @@ Exemplo de Requisição:
   "idHotel": 1,
   "status": "disponível"
 }
+```
+# Cadastrar Hóspede
+
+Cadastra um novo hóspede na plataforma.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/hospedes`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `nome` (obrigatório, tipo: string): Nome do hóspede.
+- `cpf` (obrigatório, tipo: string): CPF do hóspede (apenas números).
+- `telefone` (obrigatório, tipo: string): Número de telefone do hóspede (apenas números, com DDD).
+- `email` (obrigatório, tipo: string): Email do hóspede.
+
+Exemplo de Requisição:
+
+```json
+{
+  "nome": "Nome do Hóspede",
+  "cpf": "12345678901",
+  "telefone": "11987654321",
+  "email": "hospede@example.com"
+}
+```
+# Atualizar Hóspede
+
+Atualiza informações de um hóspede existente na plataforma.
+
+## Endpoint
+
+`PUT https://innsight-e19951768fbc.herokuapp.com/api/hospedes`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHospede` (obrigatório, tipo: integer): ID do hóspede que será atualizado.
+- `nome` (opcional, tipo: string): Novo nome do hóspede.
+- `cpf` (opcional, tipo: string): Novo CPF do hóspede (apenas números).
+- `telefone` (opcional, tipo: string): Novo número de telefone do hóspede (apenas números, com DDD).
+- `email` (opcional, tipo: string): Novo email do hóspede.
+
+Exemplo de Requisição:
+
+```json
+{
+  "idHospede": 1,
+  "nome": "Novo Nome do Hóspede",
+  "cpf": "98765432109",
+  "telefone": "11998765432",
+  "email": "novoemail@example.com"
+}
+```
+# Buscar Hóspedes
+
+Recupera informações sobre hóspedes cadastrados na plataforma.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/hospedes`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `nomeHospede` (opcional, tipo: string): Nome do hóspede para busca específica.
+
+Exemplo de Requisição:
+
+```json
+{
+  "nomeHospede": "Nome do Hóspede"
+}
+```
+# Buscar Hóspede por ID
+
+Recupera informações sobre um hóspede específico na plataforma.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/hospedes/{id}`
+
+## Parâmetros de Requisição
+
+- `id` (obrigatório, tipo: integer): ID do hóspede para busca específica.
+
+## Exemplo de Requisição
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/hospedes/1`
+
+## Resposta de Sucesso
+
+Status: 200 OK
+
+```json
+{
+  "idHospede": 1,
+  "nome": "Nome do Hóspede",
+  "cpf": "12345678901",
+  "telefone": "11987654321",
+  "email": "hospede@example.com"
+}
+```
