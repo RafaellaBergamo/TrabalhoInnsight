@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Hospede; // Importe o modelo Funcionario
 
-class HospedeTeste extends TestCase
+class HospedesControllerTest extends TestCase
 {
     use RefreshDatabase; // Utiliza transações e rollback
     /** @test */

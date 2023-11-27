@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Funcionario; // Importe o modelo Funcionario
 
-class FuncionarioTeste extends TestCase
+class FuncionariosControllerTest extends TestCase
 {
     use RefreshDatabase; // Utiliza transações e rollback
     /** @test */
