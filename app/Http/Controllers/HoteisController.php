@@ -135,7 +135,7 @@ class HoteisController extends Controller
 
             $hoteis = HoteisHelper::buscarHoteis($idHotel, (string) $razaoSocial);
 
-            if (empty(count($$hoteis))) {
+            if (empty($hoteis)) {
                 return response()->json(['message' => 'Nenhum hotel encontrado.'], 404);
             }
     
