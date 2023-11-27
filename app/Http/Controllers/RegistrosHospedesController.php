@@ -57,7 +57,6 @@ class RegistrosHospedesController extends Controller
                 'dtCheckin' => $dataCheckin
             ]);
 
-            dd($request->all());
             RegistroHospede::create($request->all());
 
             Quarto::atualizarDadosQuarto(
