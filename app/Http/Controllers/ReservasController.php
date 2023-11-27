@@ -77,6 +77,7 @@ class ReservasController extends Controller
                 'dtSaida' => Carbon::createFromFormat('Y-m-d H:i:s', $dtSaida)
             ]);
 
+            dd($request->all());
             $reserva = Reserva::create($request->all());
 
             Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
@@ -84,7 +85,6 @@ class ReservasController extends Controller
 
             DB::commit();
 
-            dd(Reserva::find(1));
             return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
