@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-class HospedeController extends Controller
+class HospedesController extends Controller
 {
     /**
      * Cadastra um hóspede
