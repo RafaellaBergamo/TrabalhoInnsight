@@ -51,7 +51,7 @@ class RegistrosHospedesController extends Controller
                 $dataPermitida = Carbon::createFromFormat('d/m/Y', $reserva['dtEntrada'], 'America/Sao_Paulo');
     
             } catch (Exception $e) {
-                throw new Exception($e->getMessage());
+                throw new Exception("Aqui:: {$e->getMessage()}");
             }
 
             if (!$dataPermitida->isSameDay($dataCheckin)) {
