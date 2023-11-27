@@ -429,30 +429,131 @@ Exemplo de Requisição:
 
 Endpoint para buscar uma reserva específica pelo ID.
 
-- **URL**
-  ```
-  GET https://innsight-e19951768fbc.herokuapp.com/api/reservas/{id}
-  ```
+## Endpoint
+
+  `GET https://innsight-e19951768fbc.herokuapp.com/api/reservas/{id}`
 
 ## Atualizar Reserva
 
 Endpoint para atualizar uma reserva existente.
 
-- **URL**
-  ```
-  PUT https://innsight-e19951768fbc.herokuapp.com/api/reservas
-  ```
+## Endpoint
 
-- **Corpo da Requisição**
+  `PUT https://innsight-e19951768fbc.herokuapp.com/api/reservas`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idReserva` (obrigatório, tipo: integer): Id da reserva a ser atualizada.
+- `idHotel` (opcional, tipo: integer): Id do hotel onde vai ser a reserva.
+- `idHospede` (opcional, tipo: integer): id do Hóspede.
+- `idQuarto` (opcional, tipo: integer): Id do hóspede da reserva.
+- `qtdHospedes` (opcional, tipo: integer): Quantidade de pessoas na reserva.
+- `dtEntrada` (opcional, tipo: date): Data de entrada da reserva (d/m/Y).
+- `dtSaida` (opcional, tipo: date): Data de saída da reserva (d/m/Y).
+- `vlReserva` (opcional, tipo: float): Valor total da reserva
+
+Exemplo de Requisição:
+
   ```json
   {
-      "idReserva": [obrigatório, integer],
-      "idHotel": [opcional, integer],
-      "idHospede": [opcional, integer],
-      "idQuarto": [opcional, integer],
-      "qtdHospedes": [opcional, integer],
-      "dtEntrada": [opcional, date, formato: d/m/Y],
-      "dtSaida":  [opcional, date, formato: d/m/Y],
-      "vlReserva": [opcional, float]
+      "idReserva": 1.
+      "idHotel": 1,
+      "idHospede": Exemplo Hóspede Novo,
+      "idQuarto": 1,
+      "qtdHospedes": 2,
+      "dtEntrada": 27/11/2023,
+      "dtSaida":  30/11/2023,
+      "vlReserva": 750
   }
   ```
+
+# Cadastrar Produtos
+
+Cadastra novos produtos na plataforma.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/produtos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `emailFuncionario` (obrigatório, tipo: string): Email do funcionário responsável pelo cadastro. Apenas funcionários MASTER ou GOVERNANÇA têm acesso.
+- `senhaFuncionario` (obrigatório, tipo: string): Senha do funcionário.
+- `idHotel` (obrigatório, tipo: integer): ID do hotel onde os produtos serão cadastrados.
+- `descricao` (obrigatório, tipo: string): Descrição do produto.
+- `qtdProduto` (obrigatório, tipo: integer): Quantidade do produto a ser cadastrada.
+
+Exemplo de Requisição:
+
+```json
+{
+  "emailFuncionario": "funcionario@example.com",
+  "senhaFuncionario": "senhasecreta",
+  "idHotel": 1,
+  "descricao": "Novo Produto",
+  "qtdProduto": 10
+}
+```
+# Buscar Produto
+
+Busca informações sobre produtos na plataforma.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/produtos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `emailFuncionario` (obrigatório, tipo: string): Email do funcionário responsável pela busca. Apenas funcionários MASTER ou GOVERNANÇA têm acesso.
+- `senhaFuncionario` (obrigatório, tipo: string): Senha do funcionário.
+- `idProduto` (opcional, tipo: integer): ID do produto a ser buscado.
+- `descricao` (opcional, tipo: string): Descrição do produto a ser buscado.
+- `idHotel` (opcional, tipo: integer): Hotel a qual o produto pertence.
+
+Exemplo de Requisição:
+
+```json
+{
+  "emailFuncionario": "funcionario@example.com",
+  "senhaFuncionario": "senhasecreta",
+  "descricao": "Produto Buscado"
+}
+```
+
+# Atualizar Produto
+
+Atualiza informações de um produto existente na plataforma.
+
+## Endpoint
+
+`PUT https://innsight-e19951768fbc.herokuapp.com/api/produtos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `emailFuncionario` (obrigatório, tipo: string): Email do funcionário responsável pela atualização. Apenas funcionários MASTER ou GOVERNANÇA têm acesso.
+- `senhaFuncionario` (obrigatório, tipo: string): Senha do funcionário.
+- `idProduto` (obrigatório, tipo: integer): ID do produto que será atualizado.
+- `idHotel` (opcional, tipo: integer): Novo ID do hotel associado ao produto.
+- `descricao` (opcional, tipo: string): Nova descrição do produto.
+- `qtdProduto` (opcional, tipo: integer): Nova quantidade do produto.
+
+Exemplo de Requisição:
+
+```json
+{
+  "emailFuncionario": "funcionario@example.com",
+  "senhaFuncionario": "senhasecreta",
+  "idProduto": 1,
+  "idHotel": 2,
+  "descricao": "Produto Atualizado",
+  "qtdProduto": 20
+}
+```
