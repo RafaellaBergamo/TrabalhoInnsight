@@ -25,6 +25,8 @@ class RelatoriosController extends Controller
     public function gerarRelatorioHospedesDoHotel(Request $request)
     {
         try {
+            
+            dd("teste");
             $request->validate([
                 'idHotel' => 'required|integer',
                 'emailFuncionario' => 'required|email',
@@ -41,7 +43,6 @@ class RelatoriosController extends Controller
             $idHotel = $request->input('idHotel');
             $hospedes = HospedesHelper::buscarHospedesDoHotel($idHotel);
 
-            dd($hospedes);
             $relatorio = FacadePdf::loadView('relatorios.relatorioHospedes', ["hospedes" => $hospedes]);
 
             return response($relatorio->output(), 200)
