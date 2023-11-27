@@ -62,13 +62,13 @@ class Quarto extends Model
     {
         $quarto = Quarto::buscarQuartos($idHotel, $idQuarto)->first();
 
-        dd($quarto);
         if (empty($quarto)) {
             throw new Exception("Hotel informado não possui quarto cadastrado.", 404);
         }
 
         $quarto->update($dados);
 
+        dd("atualizou");
         return $quarto;
     }
 }
