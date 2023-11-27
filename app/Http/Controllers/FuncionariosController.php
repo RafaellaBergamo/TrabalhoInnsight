@@ -34,7 +34,7 @@ class FuncionariosController extends Controller
                 'nome' => 'required|string',
                 'cpf' => ['required', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'tipo' => 'integer',
-                'telefone' => ['required', new ValidarTelefone],
+                'telefone' => ['required', new ValidarTelefone, new ApenasNumeros],
                 'email' => 'required|email',
                 'senha' => 'required|min:6'
             ]);
@@ -133,7 +133,7 @@ class FuncionariosController extends Controller
     
             return response()->json($funcionario);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => "Funcionário não encontrada"], 500);
+            return response()->json(['errors' => "Funcionário não encontrado"], 500);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
