@@ -66,13 +66,12 @@ class FuncionariosController extends Controller
      * @return JsonResponse
      * @throws ModelNotFoundException|Exception
      */
-    public function atualizarFuncionario(Request $request): JsonResponse
+    public function atualizarFuncionario(Request $request, int $idFuncionario): JsonResponse
     {
         try {
             DB::beginTransaction();
 
             $request->validate([
-                'idFuncionario' => 'required',
                 'nome' => 'string', 
                 'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'status' => 'integer',
@@ -80,8 +79,6 @@ class FuncionariosController extends Controller
                 'telefone' => new ValidarTelefone,
                 'email' => 'email'
             ]);
-
-            $idFuncionario = $request->input('idFuncionario');
 
             $funcionario = Funcionario::findOrFail($idFuncionario);
 
