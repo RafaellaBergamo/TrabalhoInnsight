@@ -42,7 +42,6 @@ class FuncionariosController extends Controller
                 'senha' => Hash::make($request->input('senha'))
             ]);
 
-            Hotel::findOrFail($request->input('idHotel'));
             Funcionario::create($request->all());
 
             DB::commit();
@@ -81,15 +80,6 @@ class FuncionariosController extends Controller
             ]);
 
             $funcionario = Funcionario::findOrFail($idFuncionario);
-
-            $idHotel = $request->input('idHotel');
-
-            if (
-                !empty($idHotel)
-                && empty(Hotel::find($request->input('idHotel')))
-            ) {
-                throw new Exception("Hotel não encontrado.");
-            }
 
             $funcionario->update($request->all());
 
