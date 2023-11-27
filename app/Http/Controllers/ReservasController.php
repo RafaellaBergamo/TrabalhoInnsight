@@ -151,7 +151,6 @@ class ReservasController extends Controller
         try {
             $reserva = Reserva::findOrFail($idReserva);
     
-            dd($reserva, Reserva::all());
             return response()->json($reserva);
         } catch (ModelNotFoundException $e) {
             return response()->json(['errors' => "Reserva não encontrada"], 500);
@@ -176,7 +175,7 @@ class ReservasController extends Controller
 
             $idHospede = $request->input('idHospede');
             $reserva = Reserva::where('idHospede', '=', $idHospede);
-    
+            dd(Reserva::all());
             return response()->json($reserva);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
