@@ -46,15 +46,16 @@ class RegistrosHospedesController extends Controller
                 throw new Exception("Checkin já realizado anteriormente.");
             }
 
-            $dataPermitida = (new DateTime($reserva['dtEntrada']))->format('d/m/Y');
-            $dataCheckin = Carbon::now()->format('d/m/Y');
+            $dataCheckin = Carbon::now('America/Sao_Paulo');
+            $dataPermitida = Carbon::createFromFormat('d/m/Y', $reserva['dtEntrada'], 'America/Sao_Paulo');
 
-            if ($dataPermitida != $dataCheckin) {
+            if ($dataPermitida != $dataCheckin->format('d/m/Y')) {
                 throw new Exception("Você só pode realizar o checkin no dia {$dataPermitida}");
             }
 
+            dd($dataCheckin);
             $request->merge([
-                'dtCheckin' => Carbon::createFromFormat('Y-m-d H:i:s', $dataCheckin)
+                'dtCheckin' => $dataCheckin
             ]);
 
             dd($request->all());
