@@ -75,13 +75,13 @@ class QuartosHelper
     public static function buscarQuartosDoHotelPorStatus(int $idHotel, string $status)
     {
         $estadosPermitidos = [
-            'disponiveis' => Quarto::DISPONIVEL,
-            'ocupados' => Quarto::OCUPADO,
-            'sujos' => Quarto::SUJO,
+            'disponível' => Quarto::DISPONIVEL,
+            'ocupado' => Quarto::OCUPADO,
+            'sujo' => Quarto::SUJO,
         ];
 
         if (!isset($estadosPermitidos[$status])) {
-            throw new Exception('Status de quarto inválido.');
+            throw new Exception('Status de quarto deve estar entre: disponível, ocupado ou sujo');
         }
         
         return Quarto::query()->where('idHotel', '=', $idHotel)
