@@ -557,3 +557,83 @@ Exemplo de Requisição:
   "qtdProduto": 20
 }
 ```
+# Cadastrar Hóspede
+
+Cadastra um novo hóspede na plataforma.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/hospedes`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `nome` (obrigatório, tipo: string): Nome do hóspede.
+- `cpf` (obrigatório, tipo: string): CPF do hóspede (apenas números).
+- `telefone` (obrigatório, tipo: string): Número de telefone do hóspede (apenas números, com DDD).
+- `email` (obrigatório, tipo: string): Email do hóspede.
+
+**Exemplo de Requisição:**
+```json
+{
+  "nome": "Nome do Hóspede",
+  "cpf": "12345678901",
+  "telefone": "11987654321",
+  "email": "hospede@example.com"
+}
+```
+
+# Relatório de Hóspedes Atualmente Hospedados no Hotel
+
+Obtém um relatório dos hóspedes atualmente hospedados no hotel.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/relatorios/hospedes`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHotel` (obrigatório, tipo: integer): ID do hotel.
+- `emailFuncionario` (obrigatório, tipo: string): Email do funcionário autorizado.
+- `senhaFuncionario` (obrigatório, tipo: string): Senha do funcionário autorizado.
+
+**Exemplo de Requisição:**
+```json
+{
+    "idHotel": 1,
+    "emailFuncionario": "funcionario@hotel.com",
+    "senhaFuncionario": "senha123"
+}
+```
+
+# Relatório de Produtos
+
+Obtém um relatório de produtos.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/relatorios/produtos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idHotel` (opcional, tipo: integer): ID do hotel.
+- `idProduto` (opcional, tipo: integer): ID do produto.
+- `descricao` (opcional, tipo: string): Descrição do produto.
+- `emailFuncionario` (obrigatório, tipo: string): Email do funcionário autorizado.
+- `senhaFuncionario` (obrigatório, tipo: string): Senha do funcionário autorizado.
+
+**Exemplo de Requisição:**
+```json
+{
+    "idHotel": 1,
+    "idProduto": 101,
+    "descricao": "Produto A",
+    "emailFuncionario": "funcionario@hotel.com",
+    "senhaFuncionario": "senha123"
+}
+```
