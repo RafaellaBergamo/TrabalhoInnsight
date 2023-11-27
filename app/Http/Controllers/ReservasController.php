@@ -81,7 +81,7 @@ class ReservasController extends Controller
             $reserva = Reserva::create($request->all());
 
             Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
-            ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
+            //ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
             DB::commit();
 
