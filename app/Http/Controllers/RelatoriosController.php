@@ -25,8 +25,6 @@ class RelatoriosController extends Controller
     public function gerarRelatorioHospedesDoHotel(Request $request)
     {
         try {
-            
-            dd("teste");
             $request->validate([
                 'idHotel' => 'required|integer',
                 'emailFuncionario' => 'required|email',
