@@ -68,7 +68,6 @@ class Quarto extends Model
 
         $quarto->update($dados);
 
-        dd("atualizou");
         return $quarto;
     }
 }
