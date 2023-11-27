@@ -47,20 +47,12 @@ class RegistrosHospedesController extends Controller
             }
 
             $dataCheckin = Carbon::now('America/Sao_Paulo');
-            try {
-                $dataPermitida = Carbon::parse($reserva['dtEntrada']);
-                dd($reserva['dtEntrada'], $reserva);
-                // $dataPermitida = Carbon::createFromFormat('d/m/Y', $reserva['dtEntrada'], 'America/Sao_Paulo');
-    
-            } catch (Exception $e) {
-                throw new Exception("Aqui:: {$e->getMessage()}");
-            }
+            $dataPermitida = Carbon::parse($reserva['dtEntrada']);
 
             if (!$dataPermitida->isSameDay($dataCheckin)) {
                 throw new Exception("Você só pode realizar o checkin no dia {$dataPermitida->format('d/m/Y')}");
             }
 
-            dd($dataCheckin);
             $request->merge([
                 'dtCheckin' => $dataCheckin
             ]);
