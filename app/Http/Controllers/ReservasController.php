@@ -149,6 +149,7 @@ class ReservasController extends Controller
     public function buscarReserva(int $idReserva) 
     {
         try {
+            dd($idReserva);
             $reserva = Reserva::findOrFail($idReserva);
     
             return response()->json($reserva);

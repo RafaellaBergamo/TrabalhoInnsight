@@ -49,6 +49,7 @@ Route::prefix('/hospedes')->group(function () {
 
 Route::prefix('/reservas')->group(function () {
     Route::post("/", [ReservasController::class, 'cadastrarReserva']);
+    Route::get("/", [ReservasController::class, 'buscarReservaDoHospede']);
     Route::get("/{id}", [ReservasController::class, 'buscarReserva']);
     Route::put('/', [ReservasController::class, 'atualizarReserva']);
 });
