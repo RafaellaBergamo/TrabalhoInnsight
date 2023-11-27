@@ -147,3 +147,4 @@ class RelatoriosController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+}
