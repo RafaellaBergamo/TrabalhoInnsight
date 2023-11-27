@@ -101,7 +101,7 @@ Cadastra um novo hotel na plataforma.
 
 ### Endpoint
 
-`POST /api/hoteis`
+`POST https://innsight-e19951768fbc.herokuapp.com/api/hoteis`
 
 ### Parâmetros de Requisição
 
@@ -133,7 +133,7 @@ Atualiza informações de um hotel existente na plataforma.
 
 ## Endpoint
 
-`PUT http://localhost:8000/api/hoteis`
+`PUT https://innsight-e19951768fbc.herokuapp.com/api/hoteis/`
 
 ## Parâmetros de Requisição
 
@@ -167,7 +167,7 @@ Recupera informações sobre hotéis cadastrados na plataforma.
 
 ## Endpoint
 
-`GET http://localhost:8000/api/hoteis`
+`GET https://innsight-e19951768fbc.herokuapp.com/api/hoteis`
 
 ## Parâmetros de Requisição
 
