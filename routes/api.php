@@ -21,6 +21,11 @@ use App\Http\Controllers\RelatoriosController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::prefix('/funcionarios')->group(function () {
+    Route::post("/", [FuncionariosController::class, 'cadastrarFuncionario']);
+    Route::get("/{id}", [FuncionariosController::class, 'buscarFuncionarioPorId']);
+    Route::put('/', [FuncionariosController::class, 'atualizarFuncionario']);
+});
 
 Route::prefix('/hoteis')->group(function () {
     Route::post('/', [HoteisController::class, 'cadastrarHotel']);
@@ -47,12 +52,6 @@ Route::prefix('/reservas')->group(function () {
     Route::get("/", [ReservasController::class, 'buscarReservaPorHospede']);
     Route::get("/{id}", [ReservasController::class, 'buscarReserva']);
     Route::put('/', [ReservasController::class, 'atualizarReserva']);
-});
-
-Route::prefix('/funcionarios')->group(function () {
-    Route::post("/", [FuncionariosController::class, 'cadastrarFuncionario']);
-    Route::get("/{id}", [FuncionariosController::class, 'buscarFuncionarioPorId']);
-    Route::put('/', [FuncionariosController::class, 'atualizarFuncionario']);
 });
 
 Route::prefix('/produtos')->group(function () {
