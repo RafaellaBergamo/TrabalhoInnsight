@@ -149,9 +149,9 @@ class ReservasController extends Controller
     public function buscarReserva(int $idReserva) 
     {
         try {
-            dd(Reserva::all());
             $reserva = Reserva::findOrFail($idReserva);
     
+            dd($reserva);
             return response()->json($reserva);
         } catch (ModelNotFoundException $e) {
             return response()->json(['errors' => "Reserva não encontrada"], 500);
