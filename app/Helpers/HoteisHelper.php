@@ -74,13 +74,13 @@ class HoteisHelper
         int $idHotel = null, 
         string $razaoSocial = ''
     ) {
-        return dd(Hotel::query()
+        return Hotel::query()
             ->when(!empty($idHotel), function ($query) use ($idHotel) {
                 $query->where('id', '=', $idHotel);
             })
             ->when(!empty($razaoSocial), function ($query) use ($razaoSocial) {
                 $query->where('razaoSocial', 'LIKE', "%{$razaoSocial}%");
             })
-            ->get());
+            ->get();
     }
 }
