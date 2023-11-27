@@ -32,7 +32,7 @@ class FuncionariosController extends Controller
             $request->validate([
                 'nome' => 'required|string',
                 'cpf' => ['required|numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
-                'tipo' => 'integer',
+                'tipo' => 'integer|min:0|max:2',
                 'telefone' => ['required', new ValidarTelefone],
                 'email' => 'required|email',
                 'senha' => 'required|min:6'
@@ -74,7 +74,7 @@ class FuncionariosController extends Controller
                 'nome' => 'string', 
                 'cpf' => ['numeric', new ApenasNumeros, new ValidarCpfCnpj, new CpfCnpjUnico],
                 'status' => 'integer',
-                'tipo' => 'integer',
+                'tipo' => 'integer|min:0|max:2',
                 'telefone' => new ValidarTelefone,
                 'email' => 'email'
             ]);
@@ -86,8 +86,7 @@ class FuncionariosController extends Controller
             DB::commit();
 
             return response()->json([
-                "message" => "Funcionário atualizado com sucesso!",
-                "data" => $funcionario
+                "message" => "Funcionário atualizado com sucesso!"
             ]);
 
         } catch (ModelNotFoundException $ex) {
@@ -111,9 +110,18 @@ class FuncionariosController extends Controller
     public function buscarFuncionarioPorId(int $idFuncionario): JsonResponse
     {
         try {
-            $idFuncionario = Funcionario::findOrFail($idFuncionario);
+            $funcionario = Funcionario::select(
+                'id', 
+                'nome', 
+                'email', 
+                'cpf',
+                'telefone',
+                'status',
+                'tipo',
+                'email'
+            )->findOrFail($idFuncionario);
     
-            return response()->json($idFuncionario);
+            return response()->json($funcionario);
         } catch (ModelNotFoundException $e) {
             return response()->json(['errors' => "Funcionário não encontrada"], 500);
         } catch (Exception $e) {
