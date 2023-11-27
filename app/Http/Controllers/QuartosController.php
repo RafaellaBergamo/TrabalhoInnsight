@@ -55,20 +55,18 @@ class QuartosController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function atualizarQuarto(Request $request): JsonResponse
+    public function atualizarQuarto(Request $request, int $idQuarto): JsonResponse
     {
         try {
             DB::beginTransaction();
 
             $request->validate([
                 'idHotel' => 'required|integer',
-                'idQuarto' => 'required|integer',
                 'qtdCamas' => 'integer',
                 'capacidade' => 'integer|min:1',
                 'status' => 'integer'
             ]);
 
-            $idQuarto = $request->input('idQuarto');
             $idHotel = $request->input('idHotel');
     
             $quartoAtualizado = Quarto::atualizarDadosQuarto($idQuarto, $idHotel, $request->all());

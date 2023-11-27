@@ -37,7 +37,7 @@ Route::prefix('/quartos')->group(function () {
     Route::post("/", [QuartosController::class, 'cadastrarQuarto']);
     Route::get("/", [QuartosController::class, 'buscarQuartos']);
     Route::get("/status", [QuartosController::class, 'buscarQuartosComOStatus']);
-    Route::put('/', [QuartosController::class, 'atualizarQuarto']);
+    Route::put('/{id}', [QuartosController::class, 'atualizarQuarto']);
 });
 
 Route::prefix('/hospedes')->group(function () {
