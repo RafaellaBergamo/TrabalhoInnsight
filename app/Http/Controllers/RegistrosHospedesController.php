@@ -48,8 +48,9 @@ class RegistrosHospedesController extends Controller
 
             $dataCheckin = Carbon::now('America/Sao_Paulo');
             try {
+                $dataPermitida = Carbon::parse($reserva['dtEntrada']);
                 dd($reserva['dtEntrada'], $reserva);
-                $dataPermitida = Carbon::createFromFormat('d/m/Y', $reserva['dtEntrada'], 'America/Sao_Paulo');
+                // $dataPermitida = Carbon::createFromFormat('d/m/Y', $reserva['dtEntrada'], 'America/Sao_Paulo');
     
             } catch (Exception $e) {
                 throw new Exception("Aqui:: {$e->getMessage()}");
