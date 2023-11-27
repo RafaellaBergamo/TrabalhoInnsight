@@ -54,7 +54,7 @@ class RegistrosHospedesController extends Controller
             }
 
             $request->merge([
-                'dtCheckin' => $dataCheckin
+                'dtCheckin' => Carbon::createFromFormat('Y-m-d H:i:s', $dataCheckin)
             ]);
 
             RegistroHospede::create($request->all());
