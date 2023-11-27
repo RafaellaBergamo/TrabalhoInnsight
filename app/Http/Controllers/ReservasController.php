@@ -80,10 +80,9 @@ class ReservasController extends Controller
             $reserva = Reserva::create($request->all());
 
             Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
-            
-            dd("até aqui ok 2");
             ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
-
+            
+            dd("até aqui ok 3");
             DB::commit();
             return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
         } catch (ValidationException $e) {
