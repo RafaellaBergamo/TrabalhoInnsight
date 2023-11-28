@@ -127,12 +127,12 @@ class ReservasController extends Controller
             $dataSaida = $request->input('dtSaida');
 
             if (!empty($dataEntrada)) {
-                $dataEntrada = Carbon::parse($dataEntrada);
+                $dataEntrada = Carbon::createFromFormat('d/m/Y', $dataEntrada, 'America/Sao_Paulo');
                 $dadosFormatados['dtEntrada'] = $dataEntrada->format('Y-m-d');
             }
 
             if (!empty($dataSaida)) {
-                $dataSaida = Carbon::parse($dataSaida);
+                $dataSaida = Carbon::createFromFormat('d/m/Y', $dataSaida, 'America/Sao_Paulo');
                 $dadosFormatados['dtSaida'] = $dataSaida->format('Y-m-d');
             }
 
