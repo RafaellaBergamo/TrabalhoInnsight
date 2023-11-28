@@ -129,6 +129,7 @@ class ProdutosControllerTest extends TestCase
 
         // Chamada ao endpoint ou rota do Controller para criar um hotel
         $response = $this->post('/api/hoteis', $data);
+        $hotelId = Hotel::latest()->first()->id;
 
         // Verifique erro na crianção do hotel (status HTTP 201 - Created)
         $response->assertStatus(201);
@@ -136,7 +137,7 @@ class ProdutosControllerTest extends TestCase
         $datavalue = [
             'emailFuncionario' => 'funcio@example.com',
             'senhaFuncionario' => '123456',
-            'idHotel' => 1,
+            'idHotel' => $hotelId,
             'descricao' => 'Kit banho',
             'qtdProduto' => '80'
         ];

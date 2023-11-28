@@ -78,7 +78,7 @@ class RegistrosHospedesController extends Controller
     }
 
         /**
-     * Registra um checkin
+     * Registra um checkout
      * 
      * @param Request $request
      * @return JsonResponse
