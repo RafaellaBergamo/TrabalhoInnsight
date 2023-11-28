@@ -16,10 +16,7 @@ class ProdutosHelper
      */
     public static function notificarEstoqueBaixo(Produto $produto) 
     {
-        $idHotel = $produto->idHotel;
-        
-        $emailsGovernanca = Funcionario::where("idHotel", "=", $idHotel)
-            ->where('tipo', '=', Funcionario::GOVERNANCA)
+        $emailsGovernanca = Funcionario::where('tipo', '=', Funcionario::GOVERNANCA)
             ->get('email');
 
         Mail::to($emailsGovernanca)->send(new NotificacaoEstoque($produto));

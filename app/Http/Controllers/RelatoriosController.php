@@ -97,6 +97,11 @@ class RelatoriosController extends Controller
         }
     }
 
+    /**
+     * Gera um relatório de pagamento
+     * 
+     * @param Request $request
+     */
     public function gerarRelatorioPagamento(Request $request)
     {
         try {
@@ -117,12 +122,12 @@ class RelatoriosController extends Controller
                 throw new Exception("Funcionário sem acesso.");
             }
 
-            $idPagamento = $request->input('idPagamento');
-            $idHospede = $request->input('idHospede');
-            $idReserva = $request->input('idReserva');
-            $apenasLiquidadas = $request->input('apenasLiquidados');
+            $idPagamento = $request->input('idPagamento') ?? null;
+            $idHospede = $request->input('idHospede') ?? null;
+            $idReserva = $request->input('idReserva') ?? null;
+            $apenasLiquidadas = (bool) $request->input('apenasLiquidados');
 
-            $formaPagamento = $request->input('formaPagamento');
+            $formaPagamento = $request->input('formaPagamento') ?? null;
 
             if (
                 !empty($formaPagamento) 
@@ -131,10 +136,15 @@ class RelatoriosController extends Controller
                 throw new Exception("As formas de pagamento permitidas são: BOLETO, CARTAO_CREDITO, CARTAO_DEBITO ou DINHEIRO");
             }
 
-            $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento($formaPagamento);
+            $formaPagamentoInt = null;
+
+            if (!empty($formaPagamento)) {
+                $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento((string) $formaPagamento);
+            }
 
             $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva, $formaPagamentoInt, $apenasLiquidadas);
 
+            dd($pagamentos);
             $relatorio = FacadePdf::loadView('relatorios.relatorioPagamentos', ["pagamentos" => $pagamentos]);
 
             return response($relatorio->output(), 200)

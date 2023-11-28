@@ -30,7 +30,6 @@ class FuncionariosHelper
     public static function funcionarioComAcesso(string $email, string $senha, array $acessos): bool
     {
         $funcionario = Funcionario::where('email', '=', $email)->first();
-
         return !empty($funcionario) && Hash::check($senha, $funcionario->senha) && in_array($funcionario->tipo, $acessos);
     }
 

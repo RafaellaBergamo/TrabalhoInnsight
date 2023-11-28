@@ -84,7 +84,7 @@ class ReservasController extends Controller
 
             DB::commit();
 
-            return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado."], 201);
+            return response()->json(["message" => "Reserva cadastrada com sucesso! Um email com os dados da reserva foi enviado para o email cadastrado.", "data" => $reserva->id], 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -120,6 +120,23 @@ class ReservasController extends Controller
             $idReserva = $request->input('idReserva');
 
             $reserva = Reserva::findOrFail($idReserva);
+
+            $dadosFormatados = [];
+
+            $dataEntrada = $request->input('dtEntrada');
+            $dataSaida = $request->input('dtSaida');
+
+            if (!empty($dataEntrada)) {
+                $dataEntrada = Carbon::createFromFormat('d/m/Y', $dataEntrada, 'America/Sao_Paulo');
+                $dadosFormatados['dtEntrada'] = $dataEntrada->format('Y-m-d');
+            }
+
+            if (!empty($dataSaida)) {
+                $dataSaida = Carbon::createFromFormat('d/m/Y', $dataSaida, 'America/Sao_Paulo');
+                $dadosFormatados['dtSaida'] = $dataSaida->format('Y-m-d');
+            }
+
+            $request->merge($dadosFormatados);
 
             $reserva->update($request->all());
 
@@ -174,7 +191,7 @@ class ReservasController extends Controller
             ]);
 
             $idHospede = $request->input('idHospede');
-            $reserva = Reserva::where('idHospede', '=', $idHospede);
+            $reserva = Reserva::where('idHospede', '=', $idHospede)->get();
 
             return response()->json($reserva);
         } catch (ValidationException $e) {

@@ -264,7 +264,7 @@ class FuncionariosControllerTest extends TestCase
         // Verifica erro na crianção do funcionário (status HTTP 201 - Created)
         $response->assertStatus(201);   
 
-        // Verifica se a mensagem é a esperada
+        // Verifica se a mensagem de erro é a esperada
         $response->assertJson([
             'message' => 'Funcionário cadastrado com sucesso!'
         ]); 

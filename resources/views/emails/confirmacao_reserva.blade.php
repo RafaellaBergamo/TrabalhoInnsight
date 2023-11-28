@@ -48,8 +48,8 @@
         <div class="info">
             <p><strong>Nome do Hóspede:</strong> {{ $nomeHospede }}</p>
             <p><strong>Data de Check-in:</strong> {{ $reserva->dtEntrada->format('d/m/Y') }} </p>
-            <p><strong>Número da Reserva:</strong> {{ $reserva->dtSaida->format('d/m/Y') }} </p>
-            <p><strong>Valor:</strong> {{ number_format($reserva->vlReserva, '2', ',') }} </p>
+            <p><strong>Data de Check-out:</strong> {{ $reserva->dtSaida->format('d/m/Y') }} </p>
+            <p><strong>Valor:</strong> R${{ number_format($reserva->vlReserva, '2', ',') }} </p>
 
             <p>Estamos animados em tê-lo conosco!</p>
         </div>
