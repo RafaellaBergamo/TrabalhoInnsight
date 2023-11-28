@@ -658,6 +658,8 @@ Enviar como payload JSON:
 
 ## Configuração de Ambiente
 
+Para realizar as configurações necessárias siga:
+
 - Copiar pasta do arquivo para a pasta "www" do Laragon.
 - Iniciar Laragon.
 - Abrir terminal do Laragon.
@@ -671,6 +673,8 @@ Enviar como payload JSON:
 ```
 
 ## Execução dos testes
+
+Para realizar a execução das classes de teste siga:
 
 - Abra outro terminal além do que está aberto.
 - Insira o comando:
