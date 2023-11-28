@@ -417,11 +417,11 @@ Exemplo de Requisição:
   ```json
   {
       "idHotel": 1,
-      "idHospede": Exemplo Hóspede,
+      "idHospede": "Exemplo Hóspede",
       "idQuarto": 1,
       "qtdHospedes": 2,
-      "dtEntrada": 27/11/2023,
-      "dtSaida":  30/11/2023,
+      "dtEntrada": "27/11/2023",
+      "dtSaida":  "30/11/2023",
       "vlReserva": 750
   }
   ```
@@ -458,13 +458,13 @@ Exemplo de Requisição:
 
   ```json
   {
-      "idReserva": 1.
+      "idReserva": 1,
       "idHotel": 1,
-      "idHospede": Exemplo Hóspede Novo,
+      "idHospede": "Exemplo Hóspede",
       "idQuarto": 1,
       "qtdHospedes": 2,
-      "dtEntrada": 27/11/2023,
-      "dtSaida":  30/11/2023,
+      "dtEntrada": "27/11/2023",
+      "dtSaida":  "30/11/2023",
       "vlReserva": 750
   }
   ```
@@ -596,6 +596,54 @@ Enviar como payload JSON:
 **Exemplo de Requisição:**
 ```json
 {
+  "idReserva": 123
+}
+```
+
+# Realizar Pagamento
+
+Registra um novo pagamento associado a uma reserva.
+
+## Endpoint
+
+`POST https://innsight-e19951768fbc.herokuapp.com/api/pagamentos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idReserva` (obrigatório, tipo: integer): ID da reserva à qual o pagamento será associado.
+- `formaPagamento` (obrigatório, tipo: string): Forma de pagamento. Deve ser uma das opções: "BOLETO", "CARTAO_CREDITO", "CARTAO_DEBITO", "DINHEIRO".
+
+**Exemplo de Requisição:**
+```json
+{
+    "idReserva": 123,
+    "formaPagamento": "CARTAO_CREDITO"
+}
+```
+
+# Buscar Dados de Pagamento
+
+Obtém informações sobre pagamentos com base em filtros específicos.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/pagamentos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idPagamento` (opcional, tipo: integer): Filtra por ID do pagamento.
+- `idHospede` (opcional, tipo: integer): Filtra por ID do hóspede.
+- `idReserva` (opcional, tipo: integer): Filtra por ID da reserva.
+
+**Exemplo de Requisição:**
+```json
+{
+  "idPagamento": 456,
+  "idHospede": 789,
   "idReserva": 123
 }
 ```
