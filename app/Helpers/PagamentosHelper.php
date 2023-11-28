@@ -99,16 +99,6 @@ class PagamentosHelper
             })
             ->get();
 
-        $dadosPagamento->transform(function ($item, $key) {
-            $item->formaPagamento = array_flip([
-                'BOLETO' => 0,
-                'CARTAO_CREDITO' => 1,
-                'CARTAO_DEBITO' => 2,
-                'DINHEIRO' => 3,
-            ])[$item->formaPagamento];
-            return $item;
-        });
-
         return $dadosPagamento;
     }
 }
