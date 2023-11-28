@@ -7,15 +7,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
         }
 
         header {
@@ -27,7 +18,6 @@
 
         h1 {
             margin: 0;
-            font-size: 24px;
         }
 
         section {
@@ -52,10 +42,6 @@
         th {
             background-color: #3498db;
             color: #fff;
-        }
-
-        tbody tr:hover {
-            background-color: #f5f5f5;
         }
     </style>
 </head>
