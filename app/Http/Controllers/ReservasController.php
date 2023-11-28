@@ -121,6 +121,21 @@ class ReservasController extends Controller
 
             $reserva = Reserva::findOrFail($idReserva);
 
+            $dadosFormatados = [];
+
+            $dataEntrada = $request->input('dtEntrada');
+            $dataSaida = $request->input('dtSaida');
+
+            if (!empty($dataEntrada)) {
+                $dadosFormatados['dtEntrada'] = Carbon::createFromFormat('Y-m-d H:i:s', $dataEntrada);
+            }
+
+            if (!empty($dataSaida)) {
+                $dadosFormatados['dtSaida'] = Carbon::createFromFormat('Y-m-d H:i:s', $dataSaida);
+            }
+
+            $request->merge($dadosFormatados);
+
             $reserva->update($request->all());
 
             DB::commit();
