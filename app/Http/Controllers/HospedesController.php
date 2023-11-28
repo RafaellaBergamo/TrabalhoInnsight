@@ -33,10 +33,10 @@ class HospedesController extends Controller
                 'email' => 'required|email'
             ]);
 
-            Hospede::create($request->all());
+            $hospede = Hospede::create($request->all());
             
             DB::commit();
-            return response()->json(["message" => "Hóspede cadastrado com sucesso!"], 201);
+            return response()->json(["message" => "Hóspede cadastrado com sucesso!", "data" => $hospede->id], 201);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (Exception $e) {

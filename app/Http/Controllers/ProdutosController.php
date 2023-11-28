@@ -44,11 +44,11 @@ class ProdutosController extends Controller
 
             Hotel::findOrFail($request->input('idHotel'));
 
-            Produto::create($request->all());
+            $produto = Produto::create($request->all());
 
             DB::commit();
 
-            return response()->json(["message" => "Produto cadastrado com sucesso!"], 201);
+            return response()->json(["message" => "Produto cadastrado com sucesso!", "data" => $produto->id], 201);
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);

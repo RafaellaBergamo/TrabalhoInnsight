@@ -52,11 +52,11 @@ class FuncionariosController extends Controller
                 throw new Exception("O tipo do funcionário tem que estar entre: 0 - Comum, 1 - Governança, 2 - Master");
             }
 
-            Funcionario::create($request->all());
+            $funcionario = Funcionario::create($request->all());
 
             DB::commit();
 
-            return response()->json(["message" => "Funcionário cadastrado com sucesso!"], 201);
+            return response()->json(["message" => "Funcionário cadastrado com sucesso!", "data" => $funcionario->id], 201);
         } catch (ModelNotFoundException $ex) {
             DB::rollBack();
             return response()->json(['errors' => 'Hotel não encontrado.'], 404);
