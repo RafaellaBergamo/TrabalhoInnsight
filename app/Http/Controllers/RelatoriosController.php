@@ -8,6 +8,7 @@ use App\Helpers\PagamentosHelper;
 use App\Helpers\ProdutosHelper;
 use App\Models\Funcionario;
 use App\Models\Hotel;
+use App\Models\Pagamento;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -96,6 +97,11 @@ class RelatoriosController extends Controller
         }
     }
 
+    /**
+     * Gera um relatório de pagamento
+     * 
+     * @param Request $request
+     */
     public function gerarRelatorioPagamento(Request $request)
     {
         try {
@@ -134,6 +140,7 @@ class RelatoriosController extends Controller
 
             $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva, $formaPagamentoInt, $apenasLiquidadas);
 
+            dd($pagamentos);
             $relatorio = FacadePdf::loadView('relatorios.relatorioPagamentos', ["pagamentos" => $pagamentos]);
 
             return response($relatorio->output(), 200)

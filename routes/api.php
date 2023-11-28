@@ -73,4 +73,5 @@ Route::prefix('/pagamentos')->group(function () {
 Route::prefix('/relatorios')->group(function () {
     Route::get('/hospedes', [RelatoriosController::class, 'gerarRelatorioHospedesDoHotel']);
     Route::get('/produtos', [RelatoriosController::class, 'gerarRelatorioProdutos']);
+    Route::get('/pagamentos', [RelatoriosController::class, 'gerarRelatorioPagamento']);
 });
