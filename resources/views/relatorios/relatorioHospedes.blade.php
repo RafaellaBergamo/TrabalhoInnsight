@@ -67,9 +67,9 @@
                     <tr>
                         <td>{{ $hospede['id'] }}</td>
                         <td>{{ $hospede['nome'] }}</td>
-                        <td>{{ $hospede['dtEntrada'] }}</td>
-                        <td>{{ $hospede['dtSaida'] }}</td>
-                        <td>{{ $hospede['vlReserva'] }}</td>
+                        <td>{{ $hospede['dtEntrada']->format('d/m/Y') }}</td>
+                        <td>{{ $hospede['dtSaida']->format('d/m/Y') }}</td>
+                        <td>{{ number_format($hospede['vlReserva'], 2, ',') }}</td>
                     </tr>
                 @endforeach
             </tbody>

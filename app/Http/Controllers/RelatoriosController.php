@@ -144,7 +144,6 @@ class RelatoriosController extends Controller
 
             $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva, $formaPagamentoInt, $apenasLiquidadas);
 
-            dd($pagamentos);
             $relatorio = FacadePdf::loadView('relatorios.relatorioPagamentos', ["pagamentos" => $pagamentos]);
 
             return response($relatorio->output(), 200)

@@ -187,50 +187,6 @@ class HospedesControllerTest extends TestCase
         ]); 
     }
 
-    /**use RefreshDatabase; // Utiliza transações e rollback
-    /** @test 
-    public function atualiza_hospede()
-    {
-        $data = [
-            'nome' => 'Nome Hospede',
-            'email' => 'hospe@example.com',
-            'telefone' => '11965924467',
-            'cpf' => '98781004052'
-        ];
-
-        // Chamada ao endpoint ou rota do Controller para criar um hospeionário
-        $response = $this->post('/api/hospedes', $data);
-
-        // Verifica erro na crianção do hóspede (status HTTP 201 - OK)
-        $response->assertStatus(201);
-
-        $hospedeId = Hospede::latest()->first()->id;
-
-        $dadosAtualizados = [
-            'idHospede' => $hospedeId,
-            'nome' => 'Novo Nome',
-            'telefone' => '11987654321'
-        ];
-
-        // Execute a solicitação de atualização
-         $response = $this->put('/api/hospedes', $dadosAtualizados);
-
-        // Verifique se a resposta é bem-sucedida (status HTTP 200 OK)
-        //$response->assertStatus(200);
-
-        // Verifique se o banco de dados foi atualizado corretamente
-        $this->assertDatabaseHas('hospedes', [
-            'id' => $hospedeId,
-            'nome' => 'Novo Nome',
-            'telefone' => '11987654321'
-        ]);
-
-        // Verifica se a mensagem de erro é a esperada
-        $response->assertJson([
-            'message' => 'Hóspede atualizado com sucesso!'
-        ]); 
-    }*/
-
     use RefreshDatabase; // Utiliza transações e rollback
     /** @test */
     public function busca_hospede()
