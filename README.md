@@ -361,38 +361,6 @@ Status: 200 OK
   "email": "hospede@example.com"
 }
 ```
-# Cadastrar Funcionário
-
-Cadastra um novo funcionário na plataforma.
-
-## Endpoint
-
-`POST https://innsight-e19951768fbc.herokuapp.com/api/funcionarios`
-
-## Parâmetros de Requisição
-
-Enviar como payload JSON:
-
-- `nome` (obrigatório, tipo: string): Nome do funcionário.
-- `cpf` (obrigatório, tipo: string): CPF do funcionário (apenas números).
-- `tipo` (opcional, tipo: integer): Tipo de funcionário (0 - COMUM, 1 - GOVERNANCA, 2 - MASTER).
-- `telefone` (obrigatório, tipo: string): Número de telefone do funcionário (apenas números, com DDD).
-- `email` (obrigatório, tipo: string): Email do funcionário.
-- `senha` (obrigatório, tipo: string): Senha do funcionário (mínimo de 6 caracteres)
-
-Exemplo de Requisição:
-
-```json
-{
-  "nome": "Nome do Funcionário",
-  "cpf": "12345678901",
-  "tipo": 1,
-  "telefone": "11987654321",
-  "email": "funcionario@example.com",
-  "senha": "senha123"
-}
-```
-
 ## Cadastrar Reserva
 
 Endpoint para cadastrar uma nova reserva.
@@ -648,7 +616,7 @@ Enviar como payload JSON:
 }
 ```
 
-# Relatório de Hóspedes Atualmente Hospedados no Hotel
+# Relatório de Hóspedes
 
 Obtém um relatório dos hóspedes atualmente hospedados no hotel.
 
@@ -697,6 +665,33 @@ Enviar como payload JSON:
     "idHotel": 1,
     "idProduto": 101,
     "descricao": "Produto A",
+    "emailFuncionario": "funcionario@hotel.com",
+    "senhaFuncionario": "senha123"
+}
+```
+# Relatório de Pagamentos
+
+Obtém um relatório de pagamentos.
+
+## Endpoint
+
+`GET https://innsight-e19951768fbc.herokuapp.com/api/relatorios/pagamentos`
+
+## Parâmetros de Requisição
+
+Enviar como payload JSON:
+
+- `idReserva` (opcional, tipo: integer): Filtra pelo id da reserva.
+- `idPagamento` (opcional, tipo: integer): Filtra pelo id do pagamento.
+- `idHotel` (opcional, tipo: integer): Filtra pelo id do hotel.
+- `formaPagamento` (opcional, tipo: integer): Filtra pela forma de pagamento. Deve ser uma das opções: "BOLETO", "CARTAO_CREDITO", "CARTAO_DEBITO", "DINHEIRO"
+- `apenasLiquidados` (opcional, tipo: bool): Filtra apenas pagamentos já liquidados.
+
+**Exemplo de Requisição:**
+```json
+{
+    "formaPagamento": "BOLETO",
+    "apenasLiquidados": true,
     "emailFuncionario": "funcionario@hotel.com",
     "senhaFuncionario": "senha123"
 }
