@@ -133,7 +133,7 @@ class FuncionariosController extends Controller
     
             return response()->json($funcionario);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['errors' => "Funcionário não encontrada"], 500);
+            return response()->json(['errors' => "Funcionário não encontrado"], 500);
         } catch (Exception $e) {
             return response()->json(['errors' => $e->getMessage()], 500);
         }
