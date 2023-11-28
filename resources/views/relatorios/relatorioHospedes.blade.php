@@ -69,7 +69,7 @@
                         <td>{{ $hospede['nome'] }}</td>
                         <td>{{ $hospede['dtEntrada'] }}</td>
                         <td>{{ $hospede['dtSaida'] }}</td>
-                        <td>{{ number_format($hospede['vlReserva'], 2, ',') }}</td>
+                        <td>{{ R$ number_format($hospede['vlReserva'], 2, ',') }}</td>
                     </tr>
                 @endforeach
             </tbody>
