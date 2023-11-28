@@ -174,7 +174,7 @@ class ReservasController extends Controller
             ]);
 
             $idHospede = $request->input('idHospede');
-            $reserva = Reserva::where('idHospede', '=', $idHospede);
+            $reserva = Reserva::where('idHospede', '=', $idHospede)->get();
 
             dd($idHospede, $reserva);
             return response()->json($reserva);
