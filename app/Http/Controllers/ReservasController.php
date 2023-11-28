@@ -79,7 +79,7 @@ class ReservasController extends Controller
 
             $reserva = Reserva::create($request->all());
 
-            //Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
+            Pagamento::gerarPagamentoPendente($reserva['idHospede'], $reserva['id']);
             ReservasHelper::enviarConfirmacaoReserva($idHospede, $reserva);
 
             DB::commit();
@@ -175,7 +175,7 @@ class ReservasController extends Controller
 
             $idHospede = $request->input('idHospede');
             $reserva = Reserva::where('idHospede', '=', $idHospede);
-    
+
             return response()->json($reserva);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
