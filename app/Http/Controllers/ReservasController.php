@@ -176,7 +176,6 @@ class ReservasController extends Controller
             $idHospede = $request->input('idHospede');
             $reserva = Reserva::where('idHospede', '=', $idHospede)->get();
 
-            dd($idHospede, $reserva);
             return response()->json($reserva);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
