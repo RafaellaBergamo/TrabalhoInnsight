@@ -125,7 +125,7 @@ class RelatoriosController extends Controller
             $idPagamento = $request->input('idPagamento');
             $idHospede = $request->input('idHospede');
             $idReserva = $request->input('idReserva');
-            $apenasLiquidadas = $request->input('apenasLiquidados');
+            $apenasLiquidadas = (bool) $request->input('apenasLiquidados');
 
             $formaPagamento = $request->input('formaPagamento');
 
