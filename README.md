@@ -664,13 +664,10 @@ Enviar como payload JSON:
 - Inserir os comandos:
 
 ```
-cd caminho_da_pasta_TrabalhoInnsight
-
-composer install
-
-php artisan migrate
-
-php artisan serve
+  cd caminho_da_pasta_TrabalhoInnsight
+  composer install
+  php artisan migrate
+  php artisan serve
 ```
 
 ## Execução dos testes
@@ -678,12 +675,12 @@ php artisan serve
 - Abra outro terminal além do que está aberto.
 - Insira o comando:
 
-```cd caminho_da_pasta_TrabalhoInnsight```
+    ```cd caminho_da_pasta_TrabalhoInnsight```
 
 - Para executar todos os testes use o comando:
 
-```php artisan test```
+    ```php artisan test```
 
 - Para executar uma classe use o comando:
 
-```php artisan test tests/Unit/NomeDaClasseDeTeste.php```
+    ```php artisan test tests/Unit/NomeDaClasseDeTeste.php```
