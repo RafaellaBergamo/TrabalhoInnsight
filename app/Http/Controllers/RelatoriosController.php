@@ -122,12 +122,12 @@ class RelatoriosController extends Controller
                 throw new Exception("Funcionário sem acesso.");
             }
 
-            $idPagamento = $request->input('idPagamento');
-            $idHospede = $request->input('idHospede');
-            $idReserva = $request->input('idReserva');
+            $idPagamento = $request->input('idPagamento') ?? null;
+            $idHospede = $request->input('idHospede') ?? null;
+            $idReserva = $request->input('idReserva') ?? null;
             $apenasLiquidadas = (bool) $request->input('apenasLiquidados');
 
-            $formaPagamento = $request->input('formaPagamento');
+            $formaPagamento = $request->input('formaPagamento') ?? null;
 
             if (
                 !empty($formaPagamento) 
@@ -139,7 +139,7 @@ class RelatoriosController extends Controller
             $formaPagamentoInt = null;
 
             if (!empty($formaPagamento)) {
-                $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento($formaPagamento);
+                $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento((string) $formaPagamento);
             }
 
             $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva, $formaPagamentoInt, $apenasLiquidadas);
