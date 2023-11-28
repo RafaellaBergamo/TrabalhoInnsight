@@ -10,7 +10,9 @@ use App\Models\Funcionario;
 use App\Models\Hotel;
 use App\Models\Pagamento;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Carbon\Carbon;
 use Exception;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +44,15 @@ class RelatoriosController extends Controller
             $idHotel = $request->input('idHotel');
             $hospedes = HospedesHelper::buscarHospedesDoHotel($idHotel);
 
-            $relatorio = FacadePdf::loadView('relatorios.relatorioHospedes', ["hospedes" => $hospedes]);
+            $dadosRelatorio = [
+                'id' => $hospedes['id'],
+                'nome' => $hospedes['nome'],
+                'dtEntrada' => Carbon::createFromFormat('d/m/Y', $hospedes['dtEntrada']),
+                'dtSaida' => Carbon::createFromFormat('d/m/Y', $hospedes['dtSaida']),
+                'vlReserva' => number_format($hospedes['vlReserva'], 2, ',')
+            ];
+
+            $relatorio = FacadePdf::loadView('relatorios.relatorioHospedes', ["hospedes" => $dadosRelatorio]);
 
             return response($relatorio->output(), 200)
                 ->header('Content-Type', 'application/pdf');
