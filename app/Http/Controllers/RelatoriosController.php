@@ -136,7 +136,11 @@ class RelatoriosController extends Controller
                 throw new Exception("As formas de pagamento permitidas são: BOLETO, CARTAO_CREDITO, CARTAO_DEBITO ou DINHEIRO");
             }
 
-            $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento($formaPagamento);
+            $formaPagamentoInt = null;
+
+            if (!empty($formaPagamento)) {
+                $formaPagamentoInt = PagamentosHelper::normalizarFormaPagamento($formaPagamento);
+            }
 
             $pagamentos = PagamentosHelper::buscarDadosPagamento($idPagamento, $idHospede, $idReserva, $formaPagamentoInt, $apenasLiquidadas);
 
