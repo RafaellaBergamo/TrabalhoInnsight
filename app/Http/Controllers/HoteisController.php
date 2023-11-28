@@ -51,10 +51,10 @@ class HoteisController extends Controller
                 throw new Exception("Funcionário sem acesso.");
             }
 
-            Hotel::create($request->all());
+            $hotel = Hotel::create($request->all());
             
             DB::commit();
-            return response()->json(["message" => "Hotel cadastrado com sucesso!"], 201);
+            return response()->json(["message" => "Hotel cadastrado com sucesso!",  "data" => $hotel->id], 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
