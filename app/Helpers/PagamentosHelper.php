@@ -29,25 +29,25 @@ class PagamentosHelper
      * @param int $idPagamento
      * @return JsonResponse|JsonResource
      */
-    public static function enviarComprovantePorEmail(int $idPagamento)
+    public static function enviarComprovantePorEmail(int $idPagamento, string $formaPagamento)
     {
         $dadosPagamento = Pagamento::find($idPagamento);
 
         $hospede = Hospede::find($dadosPagamento->idHospede);
 
-        $comprovante = self::gerarComprovante($dadosPagamento, $hospede['nome']);
+        $comprovante = self::gerarComprovante($dadosPagamento, $hospede['nome'], $formaPagamento);
         
         Mail::to('bergamorafaella@gmail.com')->send(new ConfirmacaoPagamento($comprovante));
     }
 
-    public static function gerarComprovante(Pagamento $dadosPagamento, string $nomeHospede) 
+    public static function gerarComprovante(Pagamento $dadosPagamento, string $nomeHospede, string $formaPagamento) 
     {
         $vlReserva = Reserva::find($dadosPagamento->idReserva)['vlReserva'];
 
         $dtPagamento = new DateTime($dadosPagamento->dtPagamento);
 
         $dadosComprovante = [
-            "formaPagamento" => $dadosPagamento->formaPagamento,
+            "formaPagamento" => $formaPagamento,
             "dtPagamento" => $dtPagamento->format('d/m/Y'),
             "nomeHospede" => $nomeHospede,
             "vlTotal" => $vlReserva

@@ -173,6 +173,60 @@ class FuncionariosControllerTest extends TestCase
 
     use RefreshDatabase; // Utiliza transações e rollback
     /** @test */
+    public function caracteres_numericos_telefone()
+    {
+        $data = [
+            'nome' => 'Nome Funcionario',
+            'email' => 'func@example.com',
+            'telefone' => '+1196592466',
+            'senha' => '123456',
+            'tipo' => 1,
+            'cpf' => '98781004052'
+        ];
+
+        // Chamada ao endpoint ou rota do Controller para criar um funcionário
+        $response = $this->post('/api/funcionarios', $data);
+
+        // Verifica erro na crianção do funcionário (status HTTP 422 - Bad Request)
+        $response->assertStatus(422);
+
+        // Verifica se a mensagem de erro é a esperada
+        $response->assertJson([
+            'error' => [
+                'telefone' => [
+                    'O telefone/celular deve conter o formato de 10 (telefone) ou 11 (celular) dígitos',
+                ]
+            ]
+        ]); 
+    }
+
+    use RefreshDatabase; // Utiliza transações e rollback
+    /** @test */
+    public function tipo_nao_cadastrado()
+    {
+        $data = [
+            'nome' => 'Nome Funcionario',
+            'email' => 'func@example.com',
+            'telefone' => '11965924467',
+            'senha' => '123456',
+            'tipo' => 3,
+            'cpf' => '34049253003'
+        ];
+
+        // Chamada ao endpoint ou rota do Controller para criar um funcionário
+        $response = $this->post('/api/funcionarios', $data);
+
+        // Verifica erro na crianção do funcionário (status HTTP 422 - Bad Request)
+        //$response->assertStatus(422);
+
+        // Verifica se a mensagem de erro é a esperada
+        $response->assertJson([
+            'errors' => 'O tipo do funcionário tem que estar entre: 0 - Comum, 1 - Governança, 2 - Master'
+        ]);
+    }
+
+    use RefreshDatabase; // Utiliza transações e rollback
+    /** @test */
     public function atributos_obrigatorios_nao_preenchidos()
     {
         $data = [
@@ -214,5 +268,85 @@ class FuncionariosControllerTest extends TestCase
         $response->assertJson([
             'message' => 'Funcionário cadastrado com sucesso!'
         ]); 
+    }
+
+    use RefreshDatabase; // Utiliza transações e rollback
+    /** @test */
+    public function atualiza_funcionario()
+    {
+        $data = [
+            'nome' => 'Nome Funcionario',
+            'email' => 'func@example.com',
+            'telefone' => '11965924465',
+            'senha' => '123456',
+            'tipo' => 1,
+            'cpf' => '34049253003'
+        ];
+
+        // Chamada ao endpoint ou rota do Controller para criar um funcionário
+        $response = $this->post('/api/funcionarios', $data);
+
+        // Verifica erro na crianção do funcionário (status HTTP 422 - Bad Request)
+        $response->assertStatus(201);
+
+        $funcionarioId = Funcionario::latest()->first()->id;
+
+        $dadosAtualizados = [
+            'nome' => 'Novo Nome',
+            'telefone' => '11987654321',
+        ];
+
+        // Execute a solicitação de atualização
+        $response = $this->put("/api/funcionarios/{$funcionarioId}", $dadosAtualizados);
+
+        // Verifique se a resposta é bem-sucedida (status HTTP 200 OK)
+        $response->assertStatus(200);
+
+        // Verifique se o banco de dados foi atualizado corretamente
+        $this->assertDatabaseHas('funcionarios', [
+            'id' => $funcionarioId,
+            'nome' => 'Novo Nome',
+            'telefone' => '11987654321',
+        ]);
+
+        // Verifica se a mensagem de erro é a esperada
+        $response->assertJson([
+            'message' => 'Funcionário atualizado com sucesso!'
+        ]); 
+    }
+
+    use RefreshDatabase; // Utiliza transações e rollback
+    /** @test */
+    public function busca_funcionario()
+    {
+        $data = [
+            'nome' => 'Nome Funcionario',
+            'email' => 'func@example.com',
+            'telefone' => '11965924465',
+            'senha' => '123456',
+            'tipo' => 1,
+            'cpf' => '34049253003'
+        ];
+
+        // Chamada ao endpoint ou rota do Controller para criar um funcionário
+        $response = $this->post('/api/funcionarios', $data);
+
+        // Verifica erro na crianção do funcionário (status HTTP 201 - OK)
+        $response->assertStatus(201);
+
+        $funcionarioId = Funcionario::latest()->first()->id;
+
+
+        // Execute a solicitação de busca
+        $response = $this->get("/api/funcionarios/{$funcionarioId}");
+
+        // Verifique se a resposta é bem-sucedida (status HTTP 200 OK)
+        $response->assertStatus(200);
+
+        // Verifique se o id do funcionário foi encontrado no banco
+        $this->assertDatabaseHas('funcionarios', [
+            'id' => $funcionarioId
+        ]);
+
     }
 }

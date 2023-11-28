@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Hospede; // Importe o modelo Funcionario
+use App\Models\Hospede; // Importe o modelo Hospede
 
 class HospedesControllerTest extends TestCase
 {
@@ -15,7 +15,7 @@ class HospedesControllerTest extends TestCase
     {
         $data = [
             'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
+            'email' => 'hospe@example.com',
             'telefone' => '11965924467',
             'cpf' => '781004052'
         ];
@@ -42,7 +42,7 @@ class HospedesControllerTest extends TestCase
     {
         $data = [
             'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
+            'email' => 'hospe@example.com',
             'telefone' => '11965924467',
             'cpf' => 'a781004!52'
         ];
@@ -70,7 +70,7 @@ class HospedesControllerTest extends TestCase
     {
         $data = [
             'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
+            'email' => 'hospe@example.com',
             'telefone' => '11965924467',
             'cpf' => '781004052'
         ];
@@ -97,9 +97,9 @@ class HospedesControllerTest extends TestCase
     {
         $data = [
             'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
+            'email' => 'hospe@example.com',
             'telefone' => '11965924',
-            'cpf' => '9781004052'
+            'cpf' => '98781004052'
         ];
 
         // Chamada ao endpoint ou rota do Controller para criar um hóspede
@@ -124,7 +124,7 @@ class HospedesControllerTest extends TestCase
     {
         $data = [
             'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
+            'email' => 'hospe@example.com',
             'telefone' => '+1196592446',
             'cpf' => '12345678901'
         ];
@@ -151,10 +151,10 @@ class HospedesControllerTest extends TestCase
     public function atributos_obrigatorios_nao_preenchidos()
     {
         $data = [
-            'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
-            'telefone' => '11965924467',
-            'cpf' => '12345678901'
+            'nome' => '',
+            'email' => '',
+            'telefone' => '',
+            'cpf' => ''
         ];
 
         // Chamada ao endpoint ou rota do Controller para criar um hóspede
@@ -170,7 +170,7 @@ class HospedesControllerTest extends TestCase
     {
         $data = [
             'nome' => 'Nome Hospede',
-            'email' => 'func@example.com',
+            'email' => 'hospe@example.com',
             'telefone' => '11965924467',
             'cpf' => '98781004052'
         ];
@@ -181,9 +181,86 @@ class HospedesControllerTest extends TestCase
         // Verifica erro na crianção do hóspede (status HTTP 201 - Created)
         $response->assertStatus(201);   
 
-        // Verifica se a mensagem de erro é a esperada
+        // Verifica se a mensagem é a esperada
         $response->assertJson([
             'message' => 'Hóspede cadastrado com sucesso!'
         ]); 
+    }
+
+    /**use RefreshDatabase; // Utiliza transações e rollback
+    /** @test 
+    public function atualiza_hospede()
+    {
+        $data = [
+            'nome' => 'Nome Hospede',
+            'email' => 'hospe@example.com',
+            'telefone' => '11965924467',
+            'cpf' => '98781004052'
+        ];
+
+        // Chamada ao endpoint ou rota do Controller para criar um hospeionário
+        $response = $this->post('/api/hospedes', $data);
+
+        // Verifica erro na crianção do hóspede (status HTTP 201 - OK)
+        $response->assertStatus(201);
+
+        $hospedeId = Hospede::latest()->first()->id;
+
+        $dadosAtualizados = [
+            'idHospede' => $hospedeId,
+            'nome' => 'Novo Nome',
+            'telefone' => '11987654321'
+        ];
+
+        // Execute a solicitação de atualização
+         $response = $this->put('/api/hospedes', $dadosAtualizados);
+
+        // Verifique se a resposta é bem-sucedida (status HTTP 200 OK)
+        //$response->assertStatus(200);
+
+        // Verifique se o banco de dados foi atualizado corretamente
+        $this->assertDatabaseHas('hospedes', [
+            'id' => $hospedeId,
+            'nome' => 'Novo Nome',
+            'telefone' => '11987654321'
+        ]);
+
+        // Verifica se a mensagem de erro é a esperada
+        $response->assertJson([
+            'message' => 'Hóspede atualizado com sucesso!'
+        ]); 
+    }*/
+
+    use RefreshDatabase; // Utiliza transações e rollback
+    /** @test */
+    public function busca_hospede()
+    {
+        $data = [
+            'nome' => 'Nome Hospede',
+            'email' => 'hospe@example.com',
+            'telefone' => '11965924467',
+            'cpf' => '98781004052'
+        ];
+
+        // Chamada ao endpoint ou rota do Controller para criar um hóspede
+        $response = $this->post('/api/hospedes', $data);
+
+        // Verifica erro na crianção do hospeionário (status HTTP 201 - OK)
+        $response->assertStatus(201);
+
+        $hospedeId = hospede::latest()->first()->id;
+
+
+        // Execute a solicitação de busca
+        $response = $this->get("/api/hospedes/{$hospedeId}");
+
+        // Verifique se a resposta é bem-sucedida (status HTTP 200 - OK)
+        $response->assertStatus(200);
+
+        // Verifique se o id do hóspede foi encontrado no banco
+        $this->assertDatabaseHas('hospedes', [
+            'id' => $hospedeId
+        ]);
+
     }
 }

@@ -49,7 +49,7 @@ class PagamentosController extends Controller
 
             $pagamento->update($request->all());                                                                                                                                                                                                           
             
-            PagamentosHelper::enviarComprovantePorEmail($pagamento['id']);   
+            PagamentosHelper::enviarComprovantePorEmail($pagamento['id'], $formaPagamento);   
 
             DB::commit();
             return response()->json(["message" => "Pagamento efetuado com sucesso! Um email com os dados do pagamento foi enviado para o email cadastrado."], 201);
