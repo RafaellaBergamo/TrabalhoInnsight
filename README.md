@@ -662,10 +662,10 @@ Enviar como payload JSON:
 - Iniciar Laragon.
 - Abrir terminal do Laragon.
 - Inserir os comandos:
-```cd caminho_da_pasta_TrabalhoInnsight```
-```composer install```
-```php artisan migrate```
-```php artisan serve```
+````cd caminho_da_pasta_TrabalhoInnsight````
+````composer install````
+````php artisan migrate````
+````php artisan serve````
 
 ## Execução dos testes
 
