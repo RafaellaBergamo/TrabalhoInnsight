@@ -44,15 +44,7 @@ class RelatoriosController extends Controller
             $idHotel = $request->input('idHotel');
             $hospedes = HospedesHelper::buscarHospedesDoHotel($idHotel);
 
-            $dadosRelatorio = [
-                'id' => $hospedes['id'],
-                'nome' => $hospedes['nome'],
-                'dtEntrada' => Carbon::createFromFormat('d/m/Y', $hospedes['dtEntrada']),
-                'dtSaida' => Carbon::createFromFormat('d/m/Y', $hospedes['dtSaida']),
-                'vlReserva' => number_format($hospedes['vlReserva'], 2, ',')
-            ];
-
-            $relatorio = FacadePdf::loadView('relatorios.relatorioHospedes', ["hospedes" => $dadosRelatorio]);
+            $relatorio = FacadePdf::loadView('relatorios.relatorioHospedes', ["hospedes" => $hospedes]);
 
             return response($relatorio->output(), 200)
                 ->header('Content-Type', 'application/pdf');
