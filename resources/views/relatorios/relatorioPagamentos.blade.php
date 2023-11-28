@@ -72,7 +72,7 @@
                             <td>{{ $pagamento['idReserva'] }}</td>
                             <td>{{ $pagamento['dtPagamento'] }}</td>
                             <td>{{ $pagamento['formaPagamento'] }}</td>
-                            <!-- Adicione mais colunas conforme necessário -->
+                            <!-- Adicione mais colunas conforme  necessário -->
                         </tr>
                     @endforeach
                 </tbody>
